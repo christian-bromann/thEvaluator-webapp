@@ -1,0 +1,53 @@
+{
+  "name": "thEvaluator-webapp",
+  "description": "website to create and evaluate test cases of thEvaluator project",
+  "version": "0.0.1",
+  "homepage": "https://github.com/christian-bromann/thEvaluator-webapp",
+  "author": {
+    "name": "Christian Bromann",
+    "email": "contact@christian-bromann.com",
+    "url": "http://www.christian-bromann.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:christian-bromann/thEvaluator-webapp.git"
+  },
+  "bugs": {
+    "url": "https://github.com/christian-bromann/thEvaluator-webapp/issues"
+  },
+  "dependencies": {
+    "backbone-amd": "1.0.0",
+    "jquery": "2.0.0",
+    "modernizr": "2.6.2",
+    "requirejs": "2.1.5",
+    "underscore-amd": "1.4.4"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "grunt-contrib-copy": "~0.4.1",
+    "grunt-contrib-concat": "~0.1.3",
+    "grunt-contrib-coffee": "~0.6.5",
+    "grunt-contrib-uglify": "~0.2.0",
+    "grunt-contrib-compass": "~0.1.3",
+    "grunt-contrib-jshint": "~0.4.1",
+    "grunt-contrib-cssmin": "~0.6.0",
+    "grunt-contrib-connect": "~0.2.0",
+    "grunt-contrib-clean": "~0.4.0",
+    "grunt-contrib-htmlmin": "~0.1.3",
+    "grunt-contrib-imagemin": "~0.1.3",
+    "grunt-contrib-livereload": "~0.1.2",
+    "grunt-bower-requirejs": "~0.4.1",
+    "grunt-rev": "~0.1.0",
+    "grunt-usemin": "~0.1.10",
+    "grunt-regarde": "~0.1.1",
+    "grunt-requirejs": "~0.3.5",
+    "grunt-mocha": "~0.3.0",
+    "grunt-open": "~0.2.0",
+    "grunt-svgmin": "~0.1.0",
+    "grunt-concurrent": "~0.1.0",
+    "matchdep": "~0.1.1"
+  },
+  "engines": {
+    "node": ">=0.8.0"
+  }
+}
