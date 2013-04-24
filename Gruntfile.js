@@ -17,7 +17,7 @@ module.exports = function (grunt) {
 
     // configurable paths
     var yeomanConfig = {
-        app: 'thEvaluator-webapp',
+        app: 'app',
         dist: 'dist'
     };
 
@@ -124,7 +124,7 @@ module.exports = function (grunt) {
                     loadPath: 'app/components'
                 },
                 files: {
-                    'app/styles/main.css': 'app/styles/main.scss'
+                    '<%= yeoman.app %>/styles/main.css': '<%= yeoman.app %>/styles/main.scss'
                 }
             }
         },
