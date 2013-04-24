@@ -3,4 +3,4 @@ temp
 dist
 .sass-cache
 app/components
-app/styles/main.css
+app/all.min.css
