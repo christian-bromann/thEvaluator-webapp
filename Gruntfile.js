@@ -24,21 +24,18 @@ module.exports = function (grunt) {
     grunt.initConfig({
         yeoman: yeomanConfig,
         watch: {
+            sass: {
+                files: ['{.tmp,<%= yeoman.app %>}/sass/{,*/}*.scss'],
+                tasks: ['sass','livereload']
+            },
             livereload: {
                 files: [
                     '<%= yeoman.app %>/*.html',
-                    '{.tmp,<%= yeoman.app %>}/sass/{,*/}*.css',
                     '{.tmp,<%= yeoman.app %>}/scripts/{,*/}*.js',
+                    '{.tmp,<%= yeoman.app %>}/templates/{,*/}*.tpl',
                     '<%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'
                 ],
                 tasks: ['livereload']
-            },
-            sass: {
-                files: ['<%= yeoman.app %>/sass/{,*/}*.{scss,sass}'],
-                tasks: ['sass'],
-                options: {
-                    interrupt: true
-                }
             }
         },
         connect: {

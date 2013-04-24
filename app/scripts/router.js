@@ -34,11 +34,11 @@ define([
         },
 
         startView: function() {
-            // document.title = 'thEvaluator - Home';
+            document.title = 'thEvaluator - Home';
             window.app.view.render();
         },
         createView: function() {
-            // document.title = 'thEvaluator - Create new Testcase';
+            document.title = 'thEvaluator - Create new Testcase';
             new CreateView();
         }
     });
