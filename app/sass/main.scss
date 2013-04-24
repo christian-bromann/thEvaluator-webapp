@@ -4,10 +4,39 @@ $iconWhiteSpritePath: "../img/glyphicons-halflings-white.png";
 @import 'sass-bootstrap/lib/bootstrap';
 
 body {
-	padding: 40px 0 0;
+    padding: 40px 0 0;
 }
 
 .hero-unit {
     margin: 50px auto 0 auto;
     width: 400px;
+}
+
+.form-horizontal {
+    .add-cookie {
+        margin: 0 0 20px;
+    }
+    .remove-cookie {
+        position: relative;
+        left: 50px;
+    }
+    .cookieControlsFirst {
+        float: left;
+        margin-left: 20px;
+    }
+    .cookieControls {
+        float: left;
+        margin: 0;
+        position: relative;
+        left: 20px;
+    }
+    .cookieLabel {
+        float: left;
+        width: 100px;
+    }
+}
+
+.required {
+    display: block;
+    margin: 20px 0 0;
 }
