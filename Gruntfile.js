@@ -17,7 +17,7 @@ module.exports = function (grunt) {
 
     // configurable paths
     var yeomanConfig = {
-        app: 'app',
+        app: 'thEvaluator-webapp',
         dist: 'dist'
     };
 
@@ -32,6 +32,13 @@ module.exports = function (grunt) {
                     '<%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'
                 ],
                 tasks: ['livereload']
+            },
+            sass: {
+                files: ['<%= yeoman.app %>/styles/{,*/}*.{scss,sass}'],
+                tasks: ['sass'],
+                options: {
+                    interrupt: true
+                }
             }
         },
         connect: {
@@ -105,6 +112,19 @@ module.exports = function (grunt) {
                 options: {
                     run: true,
                     urls: ['http://localhost:<%= connect.options.port %>/index.html']
+                }
+            }
+        },
+        sass: {
+            dist: {
+                options: {
+                    noCache: true,
+                    unixNewlines: true,
+                    lineNumbers: true,
+                    loadPath: 'app/components'
+                },
+                files: {
+                    'app/styles/main.css': 'app/styles/main.scss'
                 }
             }
         },
@@ -221,9 +241,10 @@ module.exports = function (grunt) {
             }
         },
         concurrent: {
-            server: [],
-            test: [],
+            server: ['sass'],
+            test: ['sass'],
             dist: [
+                'sass',
                 'imagemin',
                 'svgmin',
                 'htmlmin'
