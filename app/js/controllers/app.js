@@ -16,7 +16,7 @@ define([
         init: function() {
 
             this.view = new StartView();
-            this.nav = new NavigationView();
+            this.nav  = new NavigationView();
 
         }
 

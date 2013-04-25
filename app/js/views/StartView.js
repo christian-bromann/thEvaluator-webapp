@@ -4,19 +4,22 @@ define([
     'jquery',
     'underscore',
     'backbone',
-    'text!/templates/startView.tpl'
-], function ($, _, Backbone, template) {
+    'text!/templates/startView.tpl',
+    'views/TestCaseListView',
+    'collections/TestCaseCollection'
+], function ($, _, Backbone, template, TestCaseListView, TestCaseCollection) {
     'use strict';
 
     var StartView = Backbone.View.extend({
         el: '.main',
         initialize:function(){
-            this.render();
+            this.testCaseCollection = new TestCaseCollection();
         },
         render: function(){
             this.unrender();
-
-            $(this.el).html(_.template( template ));
+            $(this.el).html( _.template( template ));
+            this.testCaseListView   = new TestCaseListView({testCaseCollection: this.testCaseCollection});
+            this.testCaseListView.render();
         },
         unrender:function(){
             $(this.el).empty();
