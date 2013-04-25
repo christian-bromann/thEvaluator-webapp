@@ -24,6 +24,10 @@ define([
                 var href     = $(this).attr('href'),
                     protocol = this.protocol + '//';
 
+                if(href === undefined) {
+                    return false;
+                }
+
                 if(href.slice(protocol.length) !== protocol) {
                     e.preventDefault();
                     that.navigate(href, true);

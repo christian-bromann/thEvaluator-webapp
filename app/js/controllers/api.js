@@ -6,43 +6,51 @@ define([
     'use strict';
 
     var scope = {};
-    var API = function(params) {
+    var API = function(url) {
         scope = this;
-        this.params = params;
+        this.url = url;
     };
 
-    var sendRequest = function(cb) {
+    var sendRequest = function() {
         $.ajax({
-            url: 'http://localhost/api/create',
+            url: scope.url,
             type: scope.type,
-            data: scope.params,
+            data: scope.data,
             dataType: 'json',
             success: function(data) {
-                cb(null,data);
+                scope.cb(null,data);
             },
             error: function(error) {
-                cb(error,null);
+                scope.cb(error,null);
             }
         });
     };
 
     API.prototype = {
 
-        get: function(cb) {
+        get: function(data,cb) {
             this.type = 'GET';
-            sendRequest(cb);
+            this.data = data;
+            this.cb   = cb;
+            sendRequest();
         },
-        post: function(cb) {
+        post: function(data,cb) {
             this.type = 'POST';
-            sendRequest(cb);
+            this.data = data;
+            this.cb   = cb;
+            sendRequest();
         },
-        put: function(cb) {
+        put: function(data,cb) {
             this.type = 'PUT';
-            sendRequest(cb);
+            this.data = data;
+            this.cb   = cb;
+            sendRequest();
         },
-        delete: function(cb) {
+        delete: function(data,cb) {
             this.type = 'DELETE';
-            sendRequest(cb);
+            this.data = data;
+            this.cb   = cb;
+            sendRequest();
         }
 
     };
