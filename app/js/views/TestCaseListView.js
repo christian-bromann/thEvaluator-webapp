@@ -12,7 +12,8 @@ define([
     var TestCaseListView = Backbone.View.extend({
         el: '.all-testcases',
         events: {
-            'click .icon-minus': 'removeTestcase'
+            'click .remove': 'removeTestcase',
+            'click .showDetails': 'toggleDetails'
         },
         initialize:function(options){
             this.testCaseCollection = options.testCaseCollection;
@@ -46,6 +47,15 @@ define([
 
             model.destroy();
             elem.remove();
+        },
+        toggleDetails: function(e) {
+            var elem = $(e.target).parents('li').find('.details');
+
+            if(elem.css('display') === 'none') {
+                $(this.el).find('.details').slideUp();
+            }
+
+            elem.slideToggle();
         }
 
     });

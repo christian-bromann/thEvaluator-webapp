@@ -10,7 +10,7 @@ define([
     var TestCase = Backbone.Model.extend({
         idAttribute: '_id',
         url: function(){
-            return 'http://localhost:9001/api/testcase';
+            return 'http://localhost:9001/api/testcase/'+(this.id ? this.id : '');
         },
         initialize: function(attributes) {
             this.attributes = attributes;
