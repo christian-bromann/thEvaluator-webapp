@@ -4,11 +4,11 @@ define([
     'jquery',
     'underscore',
     'backbone',
-    '/js/controllers/api.js',
-    '/js/views/AlertView.js',
+    'views/AlertView',
+    'models/testcase',
     'text!/templates/createView.tpl',
     'text!/templates/createCookie.tpl',
-], function ($, _, Backbone, APIRequest, Alert, view, cookieInput) {
+], function ($, _, Backbone, Alert, Testcase, view, cookieInput) {
     'use strict';
 
     var CreateView = Backbone.View.extend({
@@ -76,13 +76,17 @@ define([
                 cookies.push({name:name,value:value});
             });
             data.cookies = cookies || [];
-            data.targetAction = $(this.el).find('.targetAction');
+            data.targetAction = $(this.el).find('.targetAction').val();
 
             if(!error) {
-                new APIRequest('http://localhost:9001/api/testcase').post(data,function(err,data) {
-                    if(err === null) {
-                        $(that.el).append(new Alert({type: 'success', content: 'testcase created successfully with id '+data.id}).el);
+                var testcase = new Testcase(data);
+                testcase.save(data,{
+                    success: function() {
+                        $(that.el).append(new Alert({type: 'success', content: 'testcase created successfully!'}).el);
                         that.reset();
+                    },
+                    error: function() {
+                        $(that.el).append(new Alert({type: 'error', content: 'Uuups! A server error occured.'}).el);
                     }
                 });
             }

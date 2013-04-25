@@ -12,7 +12,7 @@
     <div class="control-group">
         <label class="control-label" for="inputStartURL">Start URL*</label>
         <div class="controls">
-            <input type="text" name="startURL" id="inputStartURL" class="required" value="http://">
+            <input type="text" name="url" id="inputStartURL" class="required" value="http://">
         </div>
     </div>
     <div class="control-group">
