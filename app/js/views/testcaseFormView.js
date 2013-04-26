@@ -5,10 +5,10 @@ define([
     'underscore',
     'backbone',
     'views/AlertView',
-    'models/testcase',
-    'collections/testCaseCollection',
-    'text!/templates/createView.tpl',
-    'text!/templates/createCookie.tpl',
+    'models/TestcaseModel',
+    'collections/TestcaseCollection',
+    'text!/templates/TestcaseForm.tpl',
+    'text!/templates/CookieForm.tpl',
 ], function ($, _, Backbone, Alert, Testcase, TestCaseCollection, view, cookieInput) {
     'use strict';
 

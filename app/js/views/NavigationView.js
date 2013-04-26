@@ -4,7 +4,7 @@ define([
     'jquery',
     'underscore',
     'backbone',
-    'text!/templates/navigationView.tpl'
+    'text!/templates/Navigation.tpl'
 ], function ($, _, Backbone, template) {
     'use strict';
 

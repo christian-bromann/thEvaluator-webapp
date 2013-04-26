@@ -4,9 +4,9 @@ define([
     'jquery',
     'underscore',
     'backbone',
-    'text!/templates/startView.tpl',
-    'views/TestCaseListView',
-    'collections/TestCaseCollection'
+    'text!/templates/Start.tpl',
+    'views/TestcaseListView',
+    'collections/TestcaseCollection'
 ], function ($, _, Backbone, template, TestCaseListView, TestCaseCollection) {
     'use strict';
 

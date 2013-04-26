@@ -5,7 +5,7 @@ define([
     'underscore',
     'backbone',
     'views/StartView',
-    'views/CreateView'
+    'views/TestcaseFormView'
 ], function ($, _, Backbone, StartView, CreateView) {
 
     'use strict';

@@ -4,7 +4,7 @@ define([
     'jquery',
     'underscore',
     'backbone',
-    'models/testcase'
+    'models/TestcaseModel'
 ], function($, _, Backbone, TestCase){
 
     'use strict';
