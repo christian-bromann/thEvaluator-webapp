@@ -2,9 +2,11 @@
 
 define([
     'jquery',
+    'underscore',
     'backbone',
+    'views/StartView',
     'views/CreateView'
-], function ($, Backbone, CreateView) {
+], function ($, _, Backbone, StartView, CreateView) {
 
     'use strict';
 
@@ -12,12 +14,16 @@ define([
 
         routes: {
             'create': 'createView',
+            'edit/:id': 'createView',
             '*actions': 'startView'
         },
+
+        activeView: null,
 
         initialize: function() {
             var that = this;
 
+            // make beautiful URLs without hashtags
             Backbone.history.start({ pushState: true });
             $(document).on('click', 'a', function(e) {
 
@@ -34,16 +40,26 @@ define([
                 }
             });
 
+            // unrender active view
+            Backbone.history.loadUrl = (function(old){
+                return function() {
+                    if(that.activeView) {
+                        that.activeView.undelegateEvents();
+                        that.activeView.unrender();
+                        that.activeView = null;
+                    }
+                    old.apply( Backbone.history, arguments );
+                };
+            })(Backbone.history.loadUrl);
+
             return this;
         },
 
         startView: function() {
-            document.title = 'thEvaluator - Home';
-            window.app.view.render();
+            this.activeView = new StartView();
         },
-        createView: function() {
-            document.title = 'thEvaluator - Create new Testcase';
-            new CreateView();
+        createView: function(id) {
+            this.activeView = new CreateView({id:id});
         }
     });
 

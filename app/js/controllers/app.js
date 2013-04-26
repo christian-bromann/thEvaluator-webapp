@@ -1,9 +1,11 @@
 /*global define */
 define([
     'jquery',
+    'underscore',
+    'backbone',
     'views/StartView',
     'views/NavigationView'
-], function( $, StartView, NavigationView) {
+], function( $, _, Backbone, StartView, NavigationView) {
 
     'use strict';
 
@@ -15,8 +17,8 @@ define([
 
         init: function() {
 
-            this.view = new StartView();
             this.nav  = new NavigationView();
+            this.eventDispatcher = _.extend({}, Backbone.Events);
 
         }
 

@@ -13,6 +13,7 @@ define([
         el: '.all-testcases',
         events: {
             'click .remove': 'removeTestcase',
+            'click .edit': 'editTestcase',
             'click .showDetails': 'toggleDetails'
         },
         initialize:function(options){
@@ -47,6 +48,10 @@ define([
 
             model.destroy();
             elem.remove();
+        },
+        editTestcase: function(e) {
+            var elem = $(e.target).parents('li');
+            window.router.navigate('edit/' + elem.data('id') ,{trigger: true});
         },
         toggleDetails: function(e) {
             var elem = $(e.target).parents('li').find('.details');

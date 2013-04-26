@@ -14,8 +14,11 @@ define([
         el: '.main',
         initialize:function(){
             this.testCaseCollection = new TestCaseCollection();
+            this.render();
         },
         render: function(){
+            document.title = 'thEvaluator - Home';
+
             this.unrender();
             $(this.el).html( _.template( template ));
             this.testCaseListView   = new TestCaseListView({testCaseCollection: this.testCaseCollection});

@@ -6,9 +6,10 @@ define([
     'backbone',
     'views/AlertView',
     'models/testcase',
+    'collections/testCaseCollection',
     'text!/templates/createView.tpl',
     'text!/templates/createCookie.tpl',
-], function ($, _, Backbone, Alert, Testcase, view, cookieInput) {
+], function ($, _, Backbone, Alert, Testcase, TestCaseCollection, view, cookieInput) {
     'use strict';
 
     var CreateView = Backbone.View.extend({
@@ -19,14 +20,36 @@ define([
             'click .submit': 'submit',
             'keydown .numberField': 'checkNumperInput'
         },
-        initialize:function(){
+        initialize:function(options){
+            this.id = options.id;
             this.render();
-            this.cookieInput = _.template(cookieInput);
+            this.cookieInput = this.getCookieTemplate();
         },
         render: function(){
+            document.title = 'thEvaluator - ' + (this.id ? 'Edit' : 'Create new') + ' Testcase';
+
+            var that        = this,
+                cookieInput = '';
+
             this.unrender();
 
-            $(this.el).html(_.template( view ));
+            if(this.id) {
+                var testcase = new Testcase({id: this.id});
+                testcase.fetch({
+                    success: function(testcase) {
+                        that.editTestcase = testcase;
+
+                        // render cookie inputs
+                        _.each(testcase.get('cookies'), function(cookie) {
+                            cookieInput += that.getCookieTemplate(cookie);
+                        });
+
+                        $(that.el).html(_.template( view, {testcase: testcase, cookies: cookieInput} ));
+                    }
+                });
+            } else {
+                $(this.el).html(_.template( view, {testcase: {}, cookies: cookieInput} ));
+            }
         },
         unrender:function(){
             $(this.el).empty();
@@ -79,16 +102,32 @@ define([
             data.targetAction = $(this.el).find('.targetAction').val();
 
             if(!error) {
-                var testcase = new Testcase(data);
-                testcase.save(data,{
-                    success: function() {
-                        $(that.el).append(new Alert({type: 'success', content: 'testcase created successfully!'}).el);
-                        that.reset();
-                    },
-                    error: function() {
-                        $(that.el).append(new Alert({type: 'error', content: 'Uuups! A server error occured.'}).el);
-                    }
-                });
+                if(this.id && this.editTestcase) {
+                    // update testcase
+                    this.editTestcase.save(data,{
+                        success: function() {
+                            that.undelegateEvents();
+                            that.unrender();
+                            window.router.navigate('/', {trigger: true});
+                        },
+                        error: function() {
+                            $(that.el).append(new Alert({type: 'error', content: 'Uuups! A server error occured.'}).el);
+                        }
+                    });
+
+                } else {
+                    // create new testcase
+                    var testcase = new Testcase(data);
+                    testcase.save(data,{
+                        success: function() {
+                            $(that.el).append(new Alert({type: 'success', content: 'testcase created successfully!'}).el);
+                            that.reset();
+                        },
+                        error: function() {
+                            $(that.el).append(new Alert({type: 'error', content: 'Uuups! A server error occured.'}).el);
+                        }
+                    });
+                }
             }
         },
         checkNumperInput: function(e) {
@@ -104,8 +143,11 @@ define([
             }
         },
         reset: function() {
-            $(this.el).find('input').val('');
+            $(this.el).find('input,select').val('');
             $(this.el).find('.cookies > .control-group').remove();
+        },
+        getCookieTemplate: function(cookie) {
+            return _.template(cookieInput, {cookie:cookie || {}});
         }
     });
 

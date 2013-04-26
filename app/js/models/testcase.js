@@ -10,7 +10,8 @@ define([
     var TestCase = Backbone.Model.extend({
         idAttribute: '_id',
         url: function(){
-            return 'http://localhost:9001/api/testcase/'+(this.id ? this.id : '');
+            var id = this.id || this.get('id');
+            return 'http://localhost:9001/api/testcase/'+(id ? id : '');
         },
         initialize: function(attributes) {
             this.attributes = attributes;
@@ -31,6 +32,9 @@ define([
                 ((''+second).length<2 ? '0' :'') + second;
 
             return output;
+        },
+        hasChanged: function(a,b,c) {
+            console.log(a,b,c);
         }
     });
 
