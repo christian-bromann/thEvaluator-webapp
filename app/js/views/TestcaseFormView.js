@@ -6,10 +6,13 @@ define([
     'backbone',
     'views/AlertView',
     'models/TestcaseModel',
+    'models/TaskModel',
     'collections/TestcaseCollection',
     'text!/templates/TestcaseForm.tpl',
     'text!/templates/CookieForm.tpl',
-], function ($, _, Backbone, Alert, Testcase, TestCaseCollection, view, cookieInput) {
+    'text!/templates/TaskForm.tpl',
+    'text!/templates/TaskListItem.tpl',
+], function ($, _, Backbone, Alert, Testcase, Task, TestCaseCollection, view, cookieInput, taskInput, taskListItem) {
     'use strict';
 
     var CreateView = Backbone.View.extend({
@@ -17,13 +20,21 @@ define([
         events: {
             'click .add-cookie': 'addCookieInput',
             'click .remove-cookie': 'removeCookieInput',
-            'click .submit': 'submit',
+            'click .add-task': 'addTaskInput',
+            'click .cancel': 'closeTaskForm',
+            'click .remove': 'removeTask',
+            'click .edit': 'editTask',
+            'click .submit.task': 'addTask',
+            'click .submit.testcase': 'submit',
             'keydown .numberField': 'checkNumperInput'
         },
         initialize:function(options){
             this.id = options.id;
             this.render();
             this.cookieInput = this.getCookieTemplate();
+            this.taskInput   = this.getTaskTemplate();
+
+            this.tasks = [];
         },
         render: function(){
             document.title = 'thEvaluator - ' + (this.id ? 'Edit' : 'Create new') + ' Testcase';
@@ -56,6 +67,50 @@ define([
         },
         addCookieInput: function() {
             $(this.el).find('.cookies').append(this.cookieInput);
+        },
+        addTaskInput: function() {
+            $('.tasks').append(this.taskInput);
+        },
+        closeTaskForm: function(e) {
+            e.preventDefault();
+            var elem = $(e.target).parents('.taskform:eq(0)');
+
+            if(elem.hasClass('editMode')) {
+                elem.replaceWith(this.getTaskListTemplate(this.getTaskByListElem(elem)));
+            } else {
+                elem.remove();
+            }
+        },
+        removeTask: function(e) {
+            var that = this,
+                elem = $(e.target).parents('li:eq(0)'),
+                id   = elem.data('timestamp');
+
+            _.each(this.tasks,function(task,i) {
+                if(task.get('timestamp') === id) {
+                    that.tasks.splice(i,1);
+                }
+            });
+            elem.remove();
+        },
+        editTask: function(e) {
+            var elem = $(e.target).parents('li:eq(0)');
+            console.log(this.getTaskByListElem(elem));
+            elem.replaceWith(this.getTaskTemplate(this.getTaskByListElem(elem)));
+        },
+        getTaskByListElem: function(elem) {
+            var that = this,
+                id   = elem.data('timestamp'),
+                ret  = null;
+
+            _.each(this.tasks,function(task,i) {
+                console.log(task.get('timestamp') , id);
+                if(task.get('timestamp') === id) {
+                    ret = that.tasks[i];
+                }
+            });
+
+            return ret;
         },
         removeCookieInput: function(e) {
             $(e.target).parents('.control-group').remove();
@@ -99,7 +154,7 @@ define([
                 cookies.push({name:name,value:value});
             });
             data.cookies = cookies || [];
-            data.targetAction = $(this.el).find('.targetAction').val();
+            data.tasks   = this.tasks;
 
             if(!error) {
                 if(this.id && this.editTestcase) {
@@ -130,6 +185,38 @@ define([
                 }
             }
         },
+        addTask: function(e) {
+            e.preventDefault();
+
+            var el      = $(e.target).parents('.taskform:eq(0)'),
+                inputs  = el.find('input,textarea'),
+                data    = {},
+                error   = false;
+
+            el.find('.control-group.error').removeClass('error');
+            // validate input fields
+            $.each(inputs, function(i,input) {
+                input = $(input);
+
+                if(input.hasClass('required') && input.val() === '') {
+                    error = true;
+                    input.parents('.control-group').addClass('error');
+                }
+                data[input.attr('name')] = input.val();
+            });
+
+            data.targetAction = $(this.el).find('.targetAction').val();
+            data.required     = $(this.el).find('.required').is(':checked');
+            data.timestamp    = Date.now();
+
+            if(!error) {
+                var task = new Task(data);
+                this.tasks.push(task);
+                el.remove();
+                $('.tasks').append(this.getTaskListTemplate(task));
+
+            }
+        },
         checkNumperInput: function(e) {
             if(e.keyCode === 46 || e.keyCode === 8 || e.keyCode === 9 || e.keyCode === 27 || e.keyCode === 13 ||
               (e.keyCode === 65 && e.ctrlKey === true) ||
@@ -145,9 +232,19 @@ define([
         reset: function() {
             $(this.el).find('input,select').val('');
             $(this.el).find('.cookies > .control-group').remove();
+            $(this.el).find('.testcaseList').empty();
         },
         getCookieTemplate: function(cookie) {
             return _.template(cookieInput, {cookie:cookie || {}});
+        },
+        getTaskTemplate: function(task) {
+            return _.template(taskInput, {task:task || {}});
+        },
+        getTaskListTemplate: function(task) {
+            if(!task) {
+                return '';
+            }
+            return _.template(taskListItem, {task:task || {}});
         }
     });
 

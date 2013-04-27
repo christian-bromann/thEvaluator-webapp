@@ -2,7 +2,7 @@
     <h1><% if (testcase.attributes) { %>Edit<% } else { %>Create<% } %> Testcase</h1>
 </div>
 
-<form class="form-horizontal">
+<form class="form-horizontal testcase-form">
     <div class="control-group">
         <label class="control-label" for="inputName">Name*</label>
         <div class="controls">
@@ -21,7 +21,23 @@
             <input type="text" name="maxTime" id="inputMaxTime" class="numberField required" value="<% if (testcase.attributes) { %><%=testcase.get('maxTime')%><% } %>"><small>&nbsp;(in min)</small>
         </div>
     </div>
-    <fieldset>
+    <fieldset class="cookies">
+        <legend>Cookies <small>set before start of testcase</small></legend>
+        <a class="btn add-cookie"><i class="icon-plus"></i> Add Cookie</a>
+
+        <%=cookies%>
+    </fieldset>
+
+    <hr size="2">
+
+    <div class="page-header">
+        <h1>Add Tasks</h1>
+    </div>
+
+    <a class="btn add-task"><i class="icon-plus"></i> Add Task</a>
+
+    <ul class="testcaseList tasks"></ul>
+    <!-- <fieldset>
         <legend>Target <small>action on element completed testcase</small></legend>
         <div class="control-group">
             <label class="control-label" for="inputTargetAction">Action*</label>
@@ -50,20 +66,13 @@
                 <input type="text" name="targetElem" id="inputTargetElem" class="required" value="<% if (testcase.attributes) { %><%=testcase.get('targetElem')%><% } %>">
             </div>
         </div>
-    </fieldset>
-
-    <fieldset class="cookies">
-        <legend>Cookies <small>set before start of testcase</small></legend>
-        <a class="btn add-cookie"><i class="icon-plus"></i> Add Cookie</a>
-
-        <%=cookies%>
-    </fieldset>
+    </fieldset> -->
 
     <hr>
 
     <div class="control-group">
         <div class="controls">
-            <button type="submit" class="btn btn-primary submit"><% if (testcase.attributes) { %>Edit<% } else { %>Create<% } %></button>
+            <button type="submit" class="btn btn-primary submit testcase"><% if (testcase.attributes) { %>Edit<% } else { %>Create<% } %></button>
             <small class="requiredLabel">* Required</small>
         </div>
     </div>

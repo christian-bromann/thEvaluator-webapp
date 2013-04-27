@@ -12,7 +12,7 @@ body {
     width: 400px;
 }
 
-.form-horizontal {
+.testcase-form {
     .add-cookie {
         margin: 0 0 20px;
     }
@@ -33,6 +33,35 @@ body {
     .cookieLabel {
         float: left;
         width: 100px;
+    }
+
+    .page-header {
+        margin-top:80px;
+    }
+    .testcaseList {
+        .createedit {
+            padding: 30px 12px;
+        }
+        select {
+            width:130px;
+        }
+        .targetElem {
+            position:relative;
+            right: 3px;
+        }
+        .taskform {
+            padding: 30px 0;
+        }
+
+        >li:first-child {
+            margin-top: 20px;
+        }
+        .cancel {
+            margin: 0 10px 0 0;
+        }
+        small {
+            font-size: 10px;
+        }
     }
 }
 

@@ -32,9 +32,6 @@ define([
                 ((''+second).length<2 ? '0' :'') + second;
 
             return output;
-        },
-        hasChanged: function(a,b,c) {
-            console.log(a,b,c);
         }
     });
 
