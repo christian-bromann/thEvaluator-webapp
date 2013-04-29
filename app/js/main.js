@@ -14,12 +14,13 @@ require.config({
             exports: 'Backbone'
         },
         bootstrap: {
-            deps: ['jquery'],
+            deps: ['jquery','jqueryui'],
             exports: 'jquery'
         }
     },
     paths: {
         jquery: '../components/jquery/jquery',
+        jqueryui: '../components/jquery-ui/jquery-ui',
         backbone: '../components/backbone-amd/backbone',
         underscore: '../components/underscore-amd/underscore',
         text: '../components/text/text',

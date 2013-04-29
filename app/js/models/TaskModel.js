@@ -7,7 +7,7 @@ define([
     'use strict';
 
     var Task = Backbone.Model.extend({
-        idAttribute: 'id',
+        idAttribute: '_id',
         initialize: function(attributes) {
             this.attributes = attributes;
         }

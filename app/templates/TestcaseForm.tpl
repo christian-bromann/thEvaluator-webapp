@@ -36,37 +36,9 @@
 
     <a class="btn add-task"><i class="icon-plus"></i> Add Task</a>
 
-    <ul class="testcaseList tasks"></ul>
-    <!-- <fieldset>
-        <legend>Target <small>action on element completed testcase</small></legend>
-        <div class="control-group">
-            <label class="control-label" for="inputTargetAction">Action*</label>
-
-            <div class="controls">
-                <select name="targetAction" class="targetAction">
-                    <% 
-                    var events = ['blur','change','click','contextmenu','copy','cut',
-                        'dblclick','error','focus','focusin','focusout','hashchange','keydown',
-                        'keypress','keyup','load','mousedown','mouseenter','mouseleave',
-                        'mousemove','mouseout','mouseover','mouseup','mousewheel','paste',
-                        'reset','resize','scroll','select','submit','textinput','unload','wheel']; 
-
-                    for(var type in events) {
-                    %>
-                       <option <% if (testcase.attributes && testcase.get('targetAction') === events[type]) { %>selected="selected"<% } %> value="<%= events[type] %>"><%= events[type] %></option>
-                    <% 
-                    }
-                    %>
-                </select>
-            </div>
-        </div>
-        <div class="control-group">
-            <label class="control-label" for="inputTargetElem">Element*</label>
-            <div class="controls">
-                <input type="text" name="targetElem" id="inputTargetElem" class="required" value="<% if (testcase.attributes) { %><%=testcase.get('targetElem')%><% } %>">
-            </div>
-        </div>
-    </fieldset> -->
+    <ul class="testcaseList tasks">
+        <%=tasks%>
+    </ul>
 
     <hr>
 

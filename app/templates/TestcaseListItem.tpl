@@ -13,16 +13,23 @@
             <dd><%=testcase.get('url')%></dd>
             <dt>max. Time</dt>
             <dd><%=testcase.get('maxTime')%></dd>
-            <dt>Target Action</dt>
-            <dd><%=testcase.get('targetAction')%></dd>
-            <dt>Target Element</dt>
-            <dd><%=testcase.get('targetElem')%></dd>
 
             <% if(testcase.get('cookies').length) { %>
             <dt>Cookies</dt>
             <dd>
                 <% _.each(testcase.get('cookies'), function(cookie,i) { %> 
                     <strong><%= cookie.name %>: </strong><%= cookie.value %><br>
+                <% }); %>
+            </dd>
+            <% } %>
+
+            <% if(testcase.get('tasks').length) { %>
+            <dt>Tasks</dt>
+            <dd>
+                <% _.each(testcase.get('tasks'), function(task,i) { %> 
+                    <%= task.name %>
+                    <% if(task.required) { %><small>(required)</small><% } %>
+                    <br>
                 <% }); %>
             </dd>
             <% } %>

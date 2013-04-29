@@ -34,10 +34,13 @@ body {
         float: left;
         width: 100px;
     }
-
     .page-header {
         margin-top:80px;
     }
+    .add-task {
+        margin-bottom: 20px;
+    }
+
     .testcaseList {
         .createedit {
             padding: 30px 12px;
@@ -52,15 +55,15 @@ body {
         .taskform {
             padding: 30px 0;
         }
-
-        >li:first-child {
-            margin-top: 20px;
-        }
         .cancel {
             margin: 0 10px 0 0;
         }
         small {
             font-size: 10px;
+        }
+        .ui-sortable-helper {
+            border: 1px solid #dddddd;
+            border-radius: 4px;
         }
     }
 }

@@ -12,6 +12,7 @@ define([
     'text!/templates/CookieForm.tpl',
     'text!/templates/TaskForm.tpl',
     'text!/templates/TaskListItem.tpl',
+    'jqueryui',
 ], function ($, _, Backbone, Alert, Testcase, Task, TestCaseCollection, view, cookieInput, taskInput, taskListItem) {
     'use strict';
 
@@ -40,7 +41,8 @@ define([
             document.title = 'thEvaluator - ' + (this.id ? 'Edit' : 'Create new') + ' Testcase';
 
             var that        = this,
-                cookieInput = '';
+                cookieInput = '',
+                taskInput   = '';
 
             this.unrender();
 
@@ -55,11 +57,23 @@ define([
                             cookieInput += that.getCookieTemplate(cookie);
                         });
 
-                        $(that.el).html(_.template( view, {testcase: testcase, cookies: cookieInput} ));
+                        // render task input
+                        _.each(testcase.get('tasks'), function(task) {
+                            if(task.hasOwnProperty('_id')) {
+                                task.timestamp = task._id;
+                                task = new Task(task);
+                            }
+                            that.tasks.push(task);
+                            taskInput += that.getTaskListTemplate(task);
+                        });
+
+                        $(that.el).html(_.template( view, {testcase: testcase, cookies: cookieInput, tasks: taskInput} ));
+                        $('.testcaseList').sortable({ handle: '.move', cancel: '', update: that.orderTasks.bind(that) });
                     }
                 });
             } else {
-                $(this.el).html(_.template( view, {testcase: {}, cookies: cookieInput} ));
+                $(this.el).html(_.template( view, {testcase: {}, cookies: cookieInput, tasks: taskInput} ));
+                $('.testcaseList').sortable({ handle: '.move', cancel: '', update: this.orderTasks.bind(this) });
             }
         },
         unrender:function(){
@@ -95,7 +109,6 @@ define([
         },
         editTask: function(e) {
             var elem = $(e.target).parents('li:eq(0)');
-            console.log(this.getTaskByListElem(elem));
             elem.replaceWith(this.getTaskTemplate(this.getTaskByListElem(elem)));
         },
         getTaskByListElem: function(elem) {
@@ -104,7 +117,6 @@ define([
                 ret  = null;
 
             _.each(this.tasks,function(task,i) {
-                console.log(task.get('timestamp') , id);
                 if(task.get('timestamp') === id) {
                     ret = that.tasks[i];
                 }
@@ -210,10 +222,23 @@ define([
             data.timestamp    = Date.now();
 
             if(!error) {
-                var task = new Task(data);
-                this.tasks.push(task);
-                el.remove();
-                $('.tasks').append(this.getTaskListTemplate(task));
+
+                var task;
+                if(el.hasClass('editMode')) {
+                    _.each(this.tasks,function(t) {
+                        if(el.data('timestamp') === t.get('_id')) {
+                            t.set(data);
+                            task = t;
+                        }
+                    });
+                    el.replaceWith(this.getTaskListTemplate(task));
+                } else {
+                    task = new Task(data);
+                    this.tasks.push(task);
+                    console.log(this.tasks);
+                    el.remove();
+                    $('.tasks').append(this.getTaskListTemplate(task));
+                }
 
             }
         },
@@ -233,6 +258,7 @@ define([
             $(this.el).find('input,select').val('');
             $(this.el).find('.cookies > .control-group').remove();
             $(this.el).find('.testcaseList').empty();
+            this.tasks = [];
         },
         getCookieTemplate: function(cookie) {
             return _.template(cookieInput, {cookie:cookie || {}});
@@ -245,6 +271,20 @@ define([
                 return '';
             }
             return _.template(taskListItem, {task:task || {}});
+        },
+        orderTasks: function() {
+            var that        = this,
+                elements    = $('.tasks > li'),
+                sortedTasks = [];
+
+            _.each(elements,function(elem) {
+                _.each(that.tasks,function(task) {
+                    if($(elem).data('timestamp') === task.get('_id') || $(elem).data('timestamp') === task.get('timestamp')) {
+                        sortedTasks.push(task);
+                    }
+                });
+            });
+            this.tasks = sortedTasks;
         }
     });
 
