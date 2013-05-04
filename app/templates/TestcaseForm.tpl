@@ -16,9 +16,12 @@
         </div>
     </div>
     <div class="control-group">
-        <label class="control-label" for="inputMaxTime">Length of Time (max.)*</label>
-        <div class="controls">
-            <input type="text" name="maxTime" id="inputMaxTime" class="numberField required" value="<% if (testcase.attributes) { %><%=testcase.get('maxTime')%><% } %>"><small>&nbsp;(in min)</small>
+        <label class="control-label" for="inputResolutionWidth">Browser Resolution*</label>
+        <div class="controls resolutionInput">
+            <input type="text" name="resolutionWidth" id="inputResolutionWidth" class="width numberField required" value="<% if (testcase.attributes) { %><%=testcase.get('resolution')[0]%><% } %>">
+            <span>x</span>
+            <input type="text" name="resolutionHeight" id="inputResolutionHeight" class="height numberField required" value="<% if (testcase.attributes) { %><%=testcase.get('resolution')[1]%><% } %>">
+            <small>&nbsp;(in px)</small>
         </div>
     </div>
     <fieldset class="cookies">

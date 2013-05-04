@@ -11,8 +11,8 @@
             <dd><%=testcase.get('id')%></dd>
             <dt>Start URL</dt>
             <dd><%=testcase.get('url')%></dd>
-            <dt>max. Time</dt>
-            <dd><%=testcase.get('maxTime')%></dd>
+            <dt>Resolution</dt>
+            <dd><%=testcase.get('resolution')[0]%>px x <%=testcase.get('resolution')[1]%>px</dd>
 
             <% if(testcase.get('cookies').length) { %>
             <dt>Cookies</dt>

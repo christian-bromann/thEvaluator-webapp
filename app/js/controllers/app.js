@@ -3,9 +3,8 @@ define([
     'jquery',
     'underscore',
     'backbone',
-    'views/StartView',
     'views/NavigationView'
-], function( $, _, Backbone, StartView, NavigationView) {
+], function( $, _, Backbone, NavigationView) {
 
     'use strict';
 

@@ -20,6 +20,12 @@
             </label>
         </div>
     </div>
+    <div class="control-group">
+        <label class="control-label" for="inputMaxTime">Length of Time (max.)*</label>
+        <div class="controls">
+            <input type="text" name="maxTime" id="inputMaxTime" class="numberField required" value="<% if (task.attributes) { %><%=task.get('maxTime')%><% } %>"><small>&nbsp;(in min)</small>
+        </div>
+    </div>
     <div class="control-group input-prepend">
         <div class="btn-group">
             <label class="control-label" for="inputName">Target Action*</label>

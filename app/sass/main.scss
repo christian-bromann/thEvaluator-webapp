@@ -30,6 +30,48 @@ body {
         position: relative;
         left: 20px;
     }
+    .resolutionInput {
+        input {
+            width: 70px;
+            float: left;
+
+            &.width {
+                border-top-right-radius: 0;
+                border-bottom-right-radius: 0;
+                margin-left: 0;
+                text-align: right;
+            }
+
+            &.height {
+                border-top-left-radius: 0;
+                border-bottom-left-radius: 0;
+                margin-left: 0;
+                text-align: left;
+            }    
+        }
+
+        span {
+            background-color: white;
+            border: 1px solid #cccccc;
+            -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+            -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+            box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+            -webkit-transition: border linear 0.2s, box-shadow linear 0.2s;
+            -moz-transition: border linear 0.2s, box-shadow linear 0.2s;
+            -o-transition: border linear 0.2s, box-shadow linear 0.2s;
+            transition: border linear 0.2s, box-shadow linear 0.2s;
+            border-left: 0;
+            border-right: 0;
+            padding: 4px 5px;
+            float: left;
+            color: #bbbbbb;
+        }
+        small {
+            margin: 6px 0 0;
+            display: block;
+            float: left;
+        }
+    }
     .cookieLabel {
         float: left;
         width: 100px;

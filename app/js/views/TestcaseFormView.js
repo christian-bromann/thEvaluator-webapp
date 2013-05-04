@@ -167,6 +167,7 @@ define([
             });
             data.cookies = cookies || [];
             data.tasks   = this.tasks;
+            data.resolution = [data.resolutionWidth,data.resolutionHeight];
 
             if(!error) {
                 if(this.id && this.editTestcase) {
