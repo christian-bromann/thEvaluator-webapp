@@ -45,7 +45,7 @@
                 }
                 %>
             </select>
-            <input type="text" name="targetElem" class="targetElem required" value="<% if (task.attributes) { %><%=task.get('targetElem')%><% } %>"><small>(target elem, e.g. .submitButton)</small>
+            <input type="text" name="targetElem" class="targetElem required" value='<% if (task.attributes) { %><%=task.get('targetElem')%><% } %>'><small>(target elem, e.g. .submitButton)</small>
             </div>
         </div>
     </div>
