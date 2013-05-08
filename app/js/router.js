@@ -5,17 +5,22 @@ define([
     'underscore',
     'backbone',
     'views/StartView',
-    'views/TestcaseFormView'
-], function ($, _, Backbone, StartView, CreateView) {
+    'views/TestcaseFormView',
+    'views/EvaluateView',
+    'views/EvaluateTestcaseView'
+], function ($, _, Backbone, StartView, CreateView, EvaluateView, EvaluateTestcaseView) {
 
     'use strict';
 
     var Router = Backbone.Router.extend({
 
         routes: {
+            'evaluate': 'evaluateView',
+            'evaluate/:id': 'evaluateTestcaseView',
             'create': 'createView',
             'edit/:id': 'createView',
-            '*actions': 'startView'
+            // default:
+            '*actions': 'evaluateTestcaseView'
         },
 
         activeView: null,
@@ -60,6 +65,12 @@ define([
         },
         createView: function(id) {
             this.activeView = new CreateView({id:id});
+        },
+        evaluateView: function() {
+            this.activeView = new EvaluateView();
+        },
+        evaluateTestcaseView: function(id) {
+            this.activeView = new EvaluateTestcaseView({id:'ku8OYPwrv2'});
         }
     });
 

@@ -6,6 +6,7 @@
                 <ul class="nav">
                     <li class="active"><a href="/">Home</a></li>
                     <li><a href="/create">Create</a></li>
+                    <li><a href="/evaluate">Evaluate</a></li>
                 </ul>
             </div>
         </div>
