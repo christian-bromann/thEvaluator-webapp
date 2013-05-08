@@ -19,6 +19,9 @@ define([
                 return model.get('id') === id;
             });
         },
+        fetchByTestcase: function(testcase,cb) {
+            $.getJSON(this.url()+'/byTestcase/'+testcase.id,cb);
+        }
     });
 
     return TestrunCollection;
