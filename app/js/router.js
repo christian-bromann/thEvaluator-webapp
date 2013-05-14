@@ -20,7 +20,7 @@ define([
             'create': 'createView',
             'edit/:id': 'createView',
             // default:
-            '*actions': 'evaluateTestcaseView'
+            '*actions': 'startView'//'evaluateTestcaseView'
         },
 
         activeView: null,

@@ -4,8 +4,9 @@ define([
     'underscore',
     'backbone',
     'collections/TestrunCollection',
-    'models/TestcaseModel'
-], function( $, _, Backbone, TestrunCollection, Testcase) {
+    'models/TestcaseModel',
+    'views/widgets/heatmapView'
+], function( $, _, Backbone, TestrunCollection, Testcase, Heatmap) {
 
     'use strict';
 
@@ -29,13 +30,15 @@ define([
                 }
             });
 
+            this.widgets = [];
+
         },
 
         fetchTestruns: function() {
             this.testrunCollection = new TestrunCollection();
-            this.testrunCollection.fetchByTestcase(this.testcase,function(testruns) {
-                console.log(testruns);
-            });
+            this.testrunCollection.fetchByTestcase(this.testcase,function() {
+                this.widgets.push(new Heatmap(this.testrunCollection));
+            }.bind(this));
         }
 
     };

@@ -25,6 +25,7 @@ require.config({
         backbone: '../components/backbone-amd/backbone',
         underscore: '../components/underscore-amd/underscore',
         text: '../components/text/text',
+        heatmapjs: '../components/heatmapjs/heatmap',
         application: 'controllers/app',
         router: 'router'
     }

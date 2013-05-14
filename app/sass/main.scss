@@ -166,3 +166,10 @@ body {
 .evaluate {
     margin: 20px 0 0;
 }
+
+.heatmap {
+    width: 100%;
+    position: relative;
+    background: url(/img/screenshot.png) no-repeat;
+    background-size: contain;
+}
