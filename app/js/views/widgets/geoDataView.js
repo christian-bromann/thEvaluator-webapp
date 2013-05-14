@@ -3,7 +3,7 @@
 define([
     'jquery',
     'views/WidgetView',
-    'goog!visualization,1,packages:[geochart]'
+    'goog!visualization,1,packages:[geochart,corechart]'
 ], function ($, WidgetView) {
     'use strict';
 
@@ -13,15 +13,27 @@ define([
             WidgetView.prototype.constructor.apply( this, arguments );
         },
         initialize: function(){
-            this.render();
+            this.renderMap();
+            this.renderBarChart();
         },
-        render: function() {
+        renderMap: function() {
 
             var data    = google.visualization.arrayToDataTable(this.testrunCollection.getGeoData()),
                 options = {};
 
-            this.chart = new google.visualization.GeoChart(this.el.get(0));
-            this.chart.draw(data, options);
+            this.geoMap = new google.visualization.GeoChart(this.el.find('.map').get(0));
+            this.geoMap.draw(data, options);
+        },
+        renderBarChart: function() {
+            var data = google.visualization.arrayToDataTable(this.testrunCollection.getGeoData());
+
+            var options = {
+                title: 'Participants By Country',
+                legend: { position: 'none' }
+            };
+
+            this.barChart = new google.visualization.BarChart(this.el.find('.barchart').get(0));
+            this.barChart.draw(data, options);
         }
     });
 

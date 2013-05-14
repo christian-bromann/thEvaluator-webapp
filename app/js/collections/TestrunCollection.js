@@ -62,7 +62,7 @@ define([
             return ret;
         },
         getGeoData: function() {
-            var ret = [['Country', 'Popularity']],
+            var ret = [['Country', 'Participants']],
                 participantsByCountry = {};
 
             // iterate through testruns
