@@ -2,16 +2,17 @@
 
 define([
     'jquery',
-    'backbone',
+    'views/WidgetView',
     'goog!visualization,1,packages:[geochart]'
-], function ($, Backbone) {
+], function ($, WidgetView) {
     'use strict';
 
-    var GeoDataView = Backbone.View.extend({
-        el: '.geoData',
-        initialize: function(testrunCollection){
-            this.testrunCollection = testrunCollection;
-
+    var GeoDataView = WidgetView.extend({
+        name: 'geoData',
+        constructor: function(){
+            WidgetView.prototype.constructor.apply( this, arguments );
+        },
+        initialize: function(){
             this.render();
         },
         render: function() {
@@ -19,7 +20,7 @@ define([
             var data    = google.visualization.arrayToDataTable(this.testrunCollection.getGeoData()),
                 options = {};
 
-            this.chart = new google.visualization.GeoChart($(this.el).get(0));
+            this.chart = new google.visualization.GeoChart(this.el.get(0));
             this.chart.draw(data, options);
         }
     });
