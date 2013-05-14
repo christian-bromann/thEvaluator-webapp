@@ -19,15 +19,23 @@ require.config({
         }
     },
     paths: {
+        // libraries
         jquery: '../components/jquery/jquery',
         jqueryui: '../components/jquery-ui/jquery-ui',
         bootstrapDropdown: '../components/sass-bootstrap/js/bootstrap-dropdown',
         backbone: '../components/backbone-amd/backbone',
         underscore: '../components/underscore-amd/underscore',
-        text: '../components/text/text',
         heatmapjs: '../components/heatmapjs/heatmap',
+
+        // requirejs plugins
+        text: '../components/text/text',
+        async: '../components/requirejs-plugins/src/async',
+        goog: '../components/requirejs-plugins/src/goog',
+        propertyParser: '../components/requirejs-plugins/src/propertyParser',
+
+        // application files
         application: 'controllers/app',
-        router: 'router'
+        router: 'router',
     }
 });
 

@@ -5,8 +5,11 @@ define([
     'backbone',
     'collections/TestrunCollection',
     'models/TestcaseModel',
-    'views/widgets/heatmapView'
-], function( $, _, Backbone, TestrunCollection, Testcase, Heatmap) {
+
+    // widgets
+    'views/widgets/heatmapView',
+    'views/widgets/geoDataView'
+], function( $, _, Backbone, TestrunCollection, Testcase, HeatmapWidget, GeoDataWidget) {
 
     'use strict';
 
@@ -37,7 +40,8 @@ define([
         fetchTestruns: function() {
             this.testrunCollection = new TestrunCollection();
             this.testrunCollection.fetchByTestcase(this.testcase,function() {
-                this.widgets.push(new Heatmap(this.testrunCollection));
+                this.widgets.push(new HeatmapWidget(this.testrunCollection));
+                this.widgets.push(new GeoDataWidget(this.testrunCollection));
             }.bind(this));
         }
 

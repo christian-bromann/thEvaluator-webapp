@@ -50,6 +50,31 @@ define([
             }
 
             return ret;
+        },
+        getGeoData: function() {
+            var ret = [['Country', 'Popularity']],
+                participantsByCountry = {};
+
+            // iterate through testruns
+            for(var i = 0; i < this.models.length; ++i) {
+
+                if(!this.models[i].geoData) {
+                    continue;
+                }
+
+                var country = this.models[i].geoData.countryName;
+                if(participantsByCountry[country]) {
+                    participantsByCountry[country]++;
+                } else {
+                    participantsByCountry[country] = 1;
+                }
+            }
+
+            for(var countryName in participantsByCountry) {
+                ret.push([countryName,participantsByCountry[countryName]]);
+            }
+
+            return ret;
         }
     });
 
