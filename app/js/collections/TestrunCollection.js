@@ -24,27 +24,37 @@ define([
 
             $.getJSON(this.url()+'/byTestcase/'+testcase.id, function(testruns) {
                 that.models = testruns;
+                console.log(testruns);
                 cb();
             });
         },
-        getClickCoordinates: function(ratio) {
+        getEventCoordinates: function(type,ratio) {
             var ret = [],
                 i,j;
+
+            if(type !== 'moves' && type !== 'clicks') {
+                console.warn('[WARNING] wrong event type ("%s"), choose event type (moves or clicks)',type);
+                return [];
+            }
 
             // iterate through all testruns
             for(i = 0; i < this.models.length; ++i) {
 
-                // iterate through all clicks
-                for(j = 0; j < this.models[i].clicks.length; ++j) {
-                    var x = this.models[i].clicks[j].x * ratio,
-                        y = this.models[i].clicks[j].y * ratio;
+                if(!this.models[i][type]) {
+                    continue;
+                }
+
+                // iterate through all clicks/moves
+                for(j = 0; j < this.models[i][type].length; ++j) {
+                    var x = this.models[i][type][j].x * ratio,
+                        y = this.models[i][type][j].y * ratio;
 
                     ret.push({x: x, y: y});
                 }
 
             }
 
-            // add count attribute (number of all clicks)
+            // add count attribute (number of all clicks/moves)
             for(var k = 0; k < ret.length; ++k) {
                 ret[k].count = ret.length;
             }
