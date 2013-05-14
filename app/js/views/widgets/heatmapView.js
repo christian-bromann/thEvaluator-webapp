@@ -8,7 +8,7 @@ define([
     'use strict';
 
     var HeatmapView = WidgetView.extend({
-        name: 'heatmap',
+        name: 'heatmap .content',
         constructor: function(){
             WidgetView.prototype.constructor.apply( this, arguments );
         },
