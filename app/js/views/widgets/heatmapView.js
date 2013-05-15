@@ -36,7 +36,7 @@ define([
             // let's get some data
             var data = {
                 max: 20,
-                data: this.testrunCollection.getEventCoordinates('moves',this.ratio)
+                data: this.testrunCollection.getEventCoordinates('clicks',this.ratio)
             };
 
             this.heatmap.store.setDataSet(data);

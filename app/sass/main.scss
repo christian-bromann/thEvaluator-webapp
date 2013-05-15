@@ -223,3 +223,10 @@ body {
     }
 
 }
+
+.results {
+    .content > dl, .content > div {
+        float: left;
+        width: 50%;
+    }
+}
