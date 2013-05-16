@@ -48,6 +48,11 @@ define([
                     var x = this.models[i][type][j].x * ratio,
                         y = this.models[i][type][j].y * ratio;
 
+                    // neglect {0,0} coords
+                    if(x === 0 && y === 0) {
+                        continue;
+                    }
+
                     ret.push({x: x, y: y});
                 }
 
