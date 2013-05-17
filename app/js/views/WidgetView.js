@@ -7,12 +7,9 @@ define([
     'use strict';
 
     var WidgetView = Backbone.View.extend({
-        elements: '.widget',
-        constructor: function(testrunCollection){
-            this.testrunCollection = testrunCollection;
-
-            this.el = $('.'+this.name);
-            this.initialize();
+        className : 'widget',
+        super: function(args){
+            this.testrunCollection = args[0];
         }
     });
 

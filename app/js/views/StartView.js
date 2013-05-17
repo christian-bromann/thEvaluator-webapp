@@ -26,7 +26,7 @@ define([
         },
         unrender:function(){
             $(this.el).empty();
-        },
+        }
 
     });
 

@@ -12,7 +12,8 @@ define([
         el: 'body',
         events: {
             'click .nav': 'toggleActiveState',
-            'click .brand': 'activateHome'
+            'click .brand': 'activateHome',
+            'click em': 'test'
         },
         initialize:function(){
             this.render();
@@ -32,6 +33,9 @@ define([
 
             elem.find('li').removeClass('active');
             elem.find('li:eq(0)').addClass('active');
+        },
+        test: function() {
+            console.log('haha');
         }
 
     });

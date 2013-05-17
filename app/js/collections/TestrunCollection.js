@@ -27,8 +27,10 @@ define([
                 cb();
             });
         },
-        getEventCoordinates: function(type,ratio) {
+        getEventCoordinates: function(opts) {
             var ret = [],
+                type = opts.type || 'clicks',
+                ratio = opts.ratio || 1,
                 i,j;
 
             if(type !== 'moves' && type !== 'clicks') {
@@ -39,7 +41,7 @@ define([
             // iterate through all testruns
             for(i = 0; i < this.models.length; ++i) {
 
-                if(!this.models[i][type]) {
+                if(!this.models[i][type] || (opts.testrun && opts.testrun !== this.models[i]._id)) {
                     continue;
                 }
 
@@ -48,8 +50,8 @@ define([
                     var x = this.models[i][type][j].x * ratio,
                         y = this.models[i][type][j].y * ratio;
 
-                    // neglect {0,0} coords
-                    if(x === 0 && y === 0) {
+                    // neglect {0,0} coords  
+                    if((x === 0 && y === 0) || (opts.url && opts.url !== this.models[i][type][j].url)) {
                         continue;
                     }
 
@@ -110,6 +112,9 @@ define([
             for(var i = 0; i < this.models.length; ++i) {
 
                 if(!this.models[i].clicks || !this.models[i].clicks.length || this.models[i].status !== 1) {
+                    if(this.models[i].status === 1) {
+                        successfulTestruns++;
+                    }
                     continue;
                 }
                 successfulTestruns++;

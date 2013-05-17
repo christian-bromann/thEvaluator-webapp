@@ -10,17 +10,16 @@ define([
     'use strict';
 
     var ResultsView = WidgetView.extend({
-        name: 'results',
-        constructor: function(){
-            WidgetView.prototype.constructor.apply( this, arguments );
-        },
+        el: '.results',
         initialize: function() {
+            this.super(arguments);
+
             this.render();
         },
         render: function() {
 
             var stepsCount = this.testrunCollection.getStepsCount();
-            this.el.find('.content').html(_.template( template, stepsCount));
+            $(this.el).find('.content').html(_.template( template, stepsCount));
 
             var status = this.testrunCollection.countStatusTypes(),
                 data   = google.visualization.arrayToDataTable([

@@ -39,7 +39,7 @@ define([
                     return false;
                 }
 
-                if(href.slice(protocol.length) !== protocol) {
+                if(href.slice(protocol.length) !== protocol && href.indexOf('#!/') === -1) {
                     e.preventDefault();
                     that.navigate(href, true);
                 }
@@ -70,7 +70,7 @@ define([
             this.activeView = new EvaluateView();
         },
         evaluateTestcaseView: function(id) {
-            this.activeView = new EvaluateTestcaseView({id:'ku8OYPwrv2'});
+            this.activeView = new EvaluateTestcaseView({id:id});
         }
     });
 

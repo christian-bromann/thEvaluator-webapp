@@ -177,6 +177,22 @@ body {
         background: url(/img/screenshot.png) no-repeat;
         position: relative;
         background-size: contain;
+
+        nav {
+            width: 96%;
+            padding: 5px 19px;
+            background: #BBB;
+            border-bottom: #1b1b1b 1px solid;
+            position: relative;
+        }
+
+        .dropdown-menu {
+            z-index: 9999999999;
+        }
+
+        canvas {
+            top: 41px!important;
+        }
     }
 }
 
@@ -205,28 +221,34 @@ body {
         border: 1px solid #888;
         border-bottom-left-radius: 10px;
         border-bottom-right-radius: 10px;
-        overflow: hidden;
     }
 }
 
 .geoData {
-    .chart {
-        float: left;
-        padding: 10px;
+    .content {
+        overflow: hidden;
 
-        &.barchart {
-            width: 33%;
-        }
-        &.map {
-            width: 62%;
+        .chart {
+            float: left;
+            padding: 10px;
+
+            &.barchart {
+                width: 33%;
+            }
+            &.map {
+                width: 62%;
+            }
         }
     }
-
 }
 
 .results {
-    .content > dl, .content > div {
-        float: left;
-        width: 50%;
+    .content {
+        overflow: hidden;
+
+        >dl, >div {
+            float: left;
+            width: 50%;
+        }
     }
 }

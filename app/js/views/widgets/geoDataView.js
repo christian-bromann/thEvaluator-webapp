@@ -2,17 +2,18 @@
 
 define([
     'jquery',
+    'underscore',
+    'backbone',
     'views/WidgetView',
     'goog!visualization,1,packages:[geochart,corechart]'
-], function ($, WidgetView) {
+], function ($, _, backbone, WidgetView) {
     'use strict';
 
     var GeoDataView = WidgetView.extend({
-        name: 'geoData',
-        constructor: function(){
-            WidgetView.prototype.constructor.apply( this, arguments );
-        },
+        el: '.geoData',
         initialize: function(){
+            this.super(arguments);
+
             this.renderMap();
             this.renderBarChart();
         },
@@ -21,7 +22,7 @@ define([
             var data    = google.visualization.arrayToDataTable(this.testrunCollection.getGeoData()),
                 options = {};
 
-            this.geoMap = new google.visualization.GeoChart(this.el.find('.map').get(0));
+            this.geoMap = new google.visualization.GeoChart($(this.el).find('.map').get(0));
             this.geoMap.draw(data, options);
         },
         renderBarChart: function() {
@@ -32,7 +33,7 @@ define([
                 legend: { position: 'none' }
             };
 
-            this.barChart = new google.visualization.BarChart(this.el.find('.barchart').get(0));
+            this.barChart = new google.visualization.BarChart($(this.el).find('.barchart').get(0));
             this.barChart.draw(data, options);
         }
     });
