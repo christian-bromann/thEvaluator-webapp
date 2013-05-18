@@ -174,9 +174,8 @@ body {
 .heatmap {
 
     .content {
-        background: url(/img/screenshot.png) no-repeat;
         position: relative;
-        background-size: contain;
+        padding-bottom: 10px;
 
         nav {
             width: 96%;
@@ -192,6 +191,10 @@ body {
 
         canvas {
             top: 41px!important;
+        }
+
+        .clear {
+            display: none;
         }
     }
 }

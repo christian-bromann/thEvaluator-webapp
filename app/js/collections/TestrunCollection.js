@@ -47,22 +47,18 @@ define([
 
                 // iterate through all clicks/moves
                 for(j = 0; j < this.models[i][type].length; ++j) {
-                    var x = this.models[i][type][j].x * ratio,
-                        y = this.models[i][type][j].y * ratio;
+                    var x   = this.models[i][type][j].x * ratio,
+                        y   = this.models[i][type][j].y * ratio,
+                        url = this.models[i][type][j].url;
 
                     // neglect {0,0} coords  
                     if((x === 0 && y === 0) || (opts.url && opts.url !== this.models[i][type][j].url)) {
                         continue;
                     }
 
-                    ret.push({x: x, y: y});
+                    ret.push({x: x, y: y, count: 1, url: url});
                 }
 
-            }
-
-            // add count attribute (number of all clicks/moves)
-            for(var k = 0; k < ret.length; ++k) {
-                ret[k].count = ret.length;
             }
 
             return ret;

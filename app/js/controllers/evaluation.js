@@ -41,9 +41,9 @@ define([
         fetchTestruns: function() {
             this.testrunCollection = new TestrunCollection();
             this.testrunCollection.fetchByTestcase(this.testcase,function() {
-                this.widgets.push(new HeatmapWidget(this.testrunCollection));
-                this.widgets.push(new GeoDataWidget(this.testrunCollection));
-                this.widgets.push(new ResultsWidget(this.testrunCollection));
+                this.widgets.push(new HeatmapWidget(this.testrunCollection,this.testcase));
+                this.widgets.push(new GeoDataWidget(this.testrunCollection,this.testcase));
+                this.widgets.push(new ResultsWidget(this.testrunCollection,this.testcase));
             }.bind(this));
         }
 

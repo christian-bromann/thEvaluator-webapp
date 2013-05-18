@@ -24,23 +24,16 @@ define([
 
             this.param = {};
 
-            this.maxCanvasWidth = $(this.el).width(),
+            this.maxCanvasWidth = this.$el.width(),
             this.param.ratio    = this.maxCanvasWidth / this.testrunCollection.models[0]._testcase.resolution[0];
 
-            // set size of screenshots
-            $(this.el).css('height',this.testrunCollection.models[0]._testcase.resolution[1] * this.param.ratio);
-
             // init heatmap
-            var config = {
+            this.config = {
                 'radius': 10,
-                'element': $(this.el).get(0),
+                'element': this.$el.get(0),
                 'opacity': 50,
                 'gradient': { 0.45: 'rgb(0,0,255)', 0.55: 'rgb(0,255,255)', 0.65: 'rgb(0,255,0)', 0.95: 'yellow', 1.0: 'rgb(255,0,0)' }
             };
-
-            this.heatmap = window.heatmapFactory.create(config);
-            this.canvas  = $(this.el).find('canvas').get(0);
-            this.ctx     = this.canvas.getContext('2d');
 
             this.render();
         },
@@ -51,7 +44,7 @@ define([
                 models: this.testrunCollection.models
             };
 
-            $(this.el).prepend(_.template( template, content));
+            this.$el.prepend(_.template( template, content));
 
         },
         switchLabel: function(e) {
@@ -62,6 +55,8 @@ define([
 
             if($(e.target).data('param')) {
                 delete this.param[$(e.target).data('param')];
+                $(e.target).css('display','none');
+
                 if(this[this.view]) {
                     this[this.view]();
                 }
@@ -75,22 +70,40 @@ define([
 
             this.view = 'renderHeatmap';
 
+            if(!this.param.url) {
+                this.clear();
+                return;
+            }
+
+            this.clear();
+
             // let's get some data
             var data = {
                 max: 1,
                 data: this.testrunCollection.getEventCoordinates(this.param)
             };
 
-            this.heatmap.store.setDataSet(data);
+            // render screenshot
+            this.$el.find('.screenshot').remove();
+            var screenshot = $('<img />').addClass('screenshot');
+            screenshot.attr('src','http://localhost:9001/api/testcase/' + this.testcase.id + '/screenshot.jpg?url=' + encodeURIComponent(this.param.url));
+            this.$el.append(screenshot);
+
+            screenshot.load(function() {
+                this.heatmap = window.heatmapFactory.create(this.config);
+                this.heatmap.store.setDataSet(data);
+            }.bind(this));
 
         },
-        renderMovemap: function() {
-
-            this.ctx.clearRect(0,0,this.canvas.width,this.canvas.height);
-
+        clear: function() {
+            this.$el.find('canvas').remove();
+            this.$el.find('.screenshot').remove();
         },
         switchPage: function(e) {
-            this.param.url = decodeURIComponent($(e.target).attr('href').substr(3));
+            var elem = $(e.target);
+
+            this.param.url = decodeURIComponent(elem.attr('href').substr(3));
+            elem.parents('.btn-group').find('.clear').css('display','inline-block');
 
             if(this[this.view]) {
                 this[this.view]();
