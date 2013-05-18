@@ -29,8 +29,10 @@ define([
         },
         getEventCoordinates: function(opts) {
             var ret = [],
+                retGrouped = [],
                 type = opts.type || 'clicks',
                 ratio = opts.ratio || 1,
+                groupedByTestrun = false || opts.groupedByTestrun,
                 i,j;
 
             if(type !== 'moves' && type !== 'clicks') {
@@ -49,19 +51,25 @@ define([
                 for(j = 0; j < this.models[i][type].length; ++j) {
                     var x   = this.models[i][type][j].x * ratio,
                         y   = this.models[i][type][j].y * ratio,
-                        url = this.models[i][type][j].url;
+                        url = this.models[i][type][j].url,
+                        timestamp = this.models[i][type][j].timestamp;
 
                     // neglect {0,0} coords  
                     if((x === 0 && y === 0) || (opts.url && opts.url !== this.models[i][type][j].url)) {
                         continue;
                     }
 
-                    ret.push({x: x, y: y, count: 1, url: url});
+                    ret.push({x: x, y: y, count: 1, url: url, timestamp: timestamp});
+                }
+
+                if(groupedByTestrun) {
+                    retGrouped[i] = ret;
+                    ret = [];
                 }
 
             }
 
-            return ret;
+            return groupedByTestrun ? retGrouped : ret;
         },
         getGeoData: function() {
             var ret = [['Country', 'Participants']],

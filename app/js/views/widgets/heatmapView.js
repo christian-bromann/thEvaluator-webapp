@@ -95,6 +95,79 @@ define([
             }.bind(this));
 
         },
+        renderMovemap: function() {
+            this.view = 'renderMovemap';
+
+            if(!this.param.url) {
+                this.clear();
+                return;
+            }
+
+            this.clear();
+
+            this.param.type = 'moves';
+            this.param.groupedByTestrun = true;
+
+            // render screenshot
+            this.$el.find('.screenshot').remove();
+            var screenshot = $('<img />').addClass('screenshot');
+            screenshot.attr('src','http://localhost:9001/api/testcase/' + this.testcase.id + '/screenshot.jpg?url=' + encodeURIComponent(this.param.url));
+            this.$el.append(screenshot);
+
+            screenshot.load(function() {
+
+                var coordsByRun = this.testrunCollection.getEventCoordinates(this.param),
+                    canvas,ctx;
+
+                for(var i = 0; i < coordsByRun.length; ++i) {
+
+                    canvas = document.createElement('canvas');
+                    canvas.height = screenshot.get(0).height;
+                    canvas.width  = screenshot.get(0).width;
+                    ctx = canvas.getContext('2d');
+                    ctx.fillStyle = 'rgb(200,0,0)';
+
+                    this.$el.append(canvas);
+
+                    setTimeout(function() {
+                        this.context.drawLine( ctx , coordsByRun[this.i] , 1 , coordsByRun[this.i][0] );
+                    }.bind({context:this,i:i}),2000);
+                    
+                }
+
+            }.bind(this));
+
+
+        },
+        drawLine: function(ctx,coords,index,currentPoint) {
+
+            if(!coords[index]) {
+                return;
+            }
+
+            var that = this,
+                targetPoint = coords[index],
+
+                tx = targetPoint.x - currentPoint.x,
+                ty = targetPoint.y - currentPoint.y,
+                dist = Math.sqrt(tx*tx+ty*ty),
+
+                velX = (tx/dist)*1,
+                velY = (ty/dist)*1;
+
+            currentPoint.x += velX;
+            currentPoint.y += velY;
+
+            ctx.fillRect(currentPoint.x, currentPoint.y, 1, 1);
+            if(Math.abs(currentPoint.x - targetPoint.x) > 1 && Math.abs(currentPoint.y - targetPoint.y) > 1) {
+                setTimeout(function() {
+                    that.drawLine(ctx,coords,index,currentPoint);
+                }, (targetPoint.timestamp - currentPoint.timestamp) / dist);
+            } else {
+                this.drawLine(ctx,coords,++index,targetPoint);
+            }
+
+        },
         clear: function() {
             this.$el.find('canvas').remove();
             this.$el.find('.screenshot').remove();
