@@ -8,11 +8,11 @@ define([
 
     var WidgetView = Backbone.View.extend({
         className : 'widget',
-        super: function(args){
+        constructor: function(testrunCollection,testcase) {
             this.$el = $(this.el);
 
-            this.testrunCollection = args[0];
-            this.testcase          = args[1];
+            this.testrunCollection = testrunCollection;
+            this.testcase          = testcase;
 
             if(!this.testrunCollection.models.length) {
                 this.$el.html('<i>no data available</i>');
@@ -20,6 +20,7 @@ define([
                 return;
             }
 
+            this.delegateEvents();
             this.initialize();
         }
     });

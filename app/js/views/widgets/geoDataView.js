@@ -11,9 +11,6 @@ define([
 
     var GeoDataView = WidgetView.extend({
         el: '.geoData .content',
-        constructor: function() {
-            this.super(arguments);
-        },
         initialize: function() {
             this.renderMap();
             this.renderBarChart();

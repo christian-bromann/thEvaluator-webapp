@@ -11,9 +11,6 @@ define([
 
     var ResultsView = WidgetView.extend({
         el: '.results .content',
-        constructor: function() {
-            this.super(arguments);
-        },
         initialize: function() {
             this.render();
         },
