@@ -68,20 +68,13 @@ define([
         },
         renderClickmap: function() {
             this.view = 'renderClickmap';
-            this.renderMap('clicks');
-        },
-        renderHeatmap: function() {
-            this.view = 'renderHeatmap';
-            this.renderMap('moves');
-        },
-        renderMap: function(type) {
             this.clear();
 
             if(!this.param.url) {
                 return;
             }
 
-            this.param.type = type;
+            this.param.type = 'clicks';
             this.param.groupedByTestrun = false;
 
             // let's get some data
@@ -96,6 +89,44 @@ define([
                 this.heatmap.store.setDataSet(data);
 
             }.bind(this));
+        },
+        renderHeatmap: function() {
+            this.view = 'renderHeatmap';
+            this.clear();
+
+            if(!this.param.url) {
+                return;
+            }
+
+            this.param.type = 'moves';
+            this.param.groupedByTestrun = true;
+
+            var screenshot = this.createScreenshot();
+            screenshot.load(function() {
+
+                this.coordsByRun = this.testrunCollection.getEventCoordinates(this.param);
+                this.heatmap = window.heatmapFactory.create(this.config);
+                this.heatmap.toggleDisplay();
+                this.calculatedRuns = 0;
+
+                this.$el.find('nav').append('<small>Calculating... <em>0%</em></small>');
+                setTimeout(function() {
+                    this.calculateRun(0);
+                }.bind(this), 100);
+
+            }.bind(this));
+        },
+        calculateRun: function(index) {
+
+            console.log('calculate testrund %d',index);
+
+            // skip if no coords available
+            if(!this.coordsByRun[index].length) {
+                this.finishedCalculatingTestrun();
+                return;
+            }
+
+            this.drawLine( null , this.coordsByRun[index] , 1 , this.coordsByRun[index][0] );
         },
         renderTimelapse: function() {
 
@@ -141,6 +172,7 @@ define([
         drawLine: function(ctx,coords,index,currentPoint) {
 
             if(!coords[index]) {
+                if(!ctx) { this.finishedCalculatingTestrun(); }
                 return;
             }
 
@@ -154,6 +186,14 @@ define([
 
             // the double IF statement maybe looks wired but is the only way to do it
             if(!coords[index]) {
+                if(!ctx) { this.finishedCalculatingTestrun(); }
+                return;
+            }
+
+            // skip double points
+            if(Math.abs(currentPoint.x - coords[index].x) < 3 || Math.abs(currentPoint.y - coords[index].y) < 3) {
+                currentPoint.timestamp = coords[index].timestamp;
+                this.drawLine(ctx,coords,++index,currentPoint);
                 return;
             }
 
@@ -165,27 +205,56 @@ define([
                 dist = Math.sqrt(tx*tx+ty*ty),
                 timeDiff = (targetPoint.timestamp - coords[index-1].timestamp) / dist,
 
-                velX = (tx/dist)*1,
-                velY = (ty/dist)*1;
+                velX = (tx/dist)*10,
+                velY = (ty/dist)*10;
 
             currentPoint.x += velX;
             currentPoint.y += velY;
 
-            ctx.fillRect(currentPoint.x, currentPoint.y, 1, 1);
-            if(Math.abs(currentPoint.x - targetPoint.x) > 1 && Math.abs(currentPoint.y - targetPoint.y) > 1) {
+            if(ctx) {
+                ctx.fillRect(currentPoint.x, currentPoint.y, 1, 1);
+                this.heatmap.store.addDataPoint(currentPoint.x, currentPoint.y);
+            } else {
+                this.heatmap.store.addDataPoint(currentPoint.x, currentPoint.y);
+            }
 
-                setTimeout(function() {
+            if(Math.abs(currentPoint.x - targetPoint.x) > velX && Math.abs(currentPoint.y - targetPoint.y) > velY) {
+
+                if(ctx) {
+                    setTimeout(function() {
+                        that.drawLine(ctx,coords,index,currentPoint);
+                    }, timeDiff / 2);
+                } else {
                     that.drawLine(ctx,coords,index,currentPoint);
-                }, timeDiff);
+                }
 
             } else {
 
-                setTimeout(function() {
+                if(ctx) {
+                    setTimeout(function() {
+                        currentPoint.timestamp = targetPoint.timestamp;
+                        that.drawLine(ctx,coords,++index,currentPoint);
+                    }, timeDiff / 2);
+                } else {
                     currentPoint.timestamp = targetPoint.timestamp;
                     that.drawLine(ctx,coords,++index,currentPoint);
-                }, timeDiff);
+                }
             }
 
+        },
+        finishedCalculatingTestrun: function() {
+            this.calculatedRuns++;
+            this.$el.find('nav em').html((this.calculatedRuns / this.testrunCollection.models.length * 100)+'%');
+
+            setTimeout(function() {
+                if(this.testrunCollection.models.length === this.calculatedRuns) {
+                    delete this.coordsByRun;
+                    this.heatmap.toggleDisplay();
+                    this.$el.find('nav small').delay(1000).fadeOut(function() { $(this).remove(); });
+                } else {
+                    this.calculateRun(this.calculatedRuns);
+                }
+            }.bind(this),100);
         },
         createScreenshot: function() {
             // render screenshot
