@@ -13,6 +13,14 @@ define([
 
             this.testrunCollection = args[0];
             this.testcase          = args[1];
+
+            if(!this.testrunCollection.models.length) {
+                this.$el.html('<i>no data available</i>');
+                this.$el.addClass('nocontent');
+                return;
+            }
+
+            this.initialize();
         }
     });
 

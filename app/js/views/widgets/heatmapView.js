@@ -19,8 +19,10 @@ define([
             'click .pageList a': 'switchPage',
             'click .idList a': 'switchID'
         },
-        initialize: function() {
+        constructor: function() {
             this.super(arguments);
+        },
+        initialize: function() {
 
             this.param = {};
 

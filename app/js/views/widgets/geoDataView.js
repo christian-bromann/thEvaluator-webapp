@@ -10,10 +10,11 @@ define([
     'use strict';
 
     var GeoDataView = WidgetView.extend({
-        el: '.geoData',
-        initialize: function(){
+        el: '.geoData .content',
+        constructor: function() {
             this.super(arguments);
-
+        },
+        initialize: function() {
             this.renderMap();
             this.renderBarChart();
         },

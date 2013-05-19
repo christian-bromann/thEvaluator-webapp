@@ -10,16 +10,17 @@ define([
     'use strict';
 
     var ResultsView = WidgetView.extend({
-        el: '.results',
-        initialize: function() {
+        el: '.results .content',
+        constructor: function() {
             this.super(arguments);
-
+        },
+        initialize: function() {
             this.render();
         },
         render: function() {
 
             var stepsCount = this.testrunCollection.getStepsCount();
-            $(this.el).find('.content').html(_.template( template, stepsCount));
+            this.$el.html(_.template( template, stepsCount));
 
             var status = this.testrunCollection.countStatusTypes(),
                 data   = google.visualization.arrayToDataTable([
@@ -36,7 +37,7 @@ define([
                 colors:['blue','green','yellow','red']
             };
 
-            this.pieChart = new google.visualization.PieChart($('.pieChart').get(0));
+            this.pieChart = new google.visualization.PieChart(this.$el.find('.pieChart').get(0));
             this.pieChart.draw(data, options);
 
         }
