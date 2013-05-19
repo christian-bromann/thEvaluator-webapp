@@ -76,6 +76,7 @@ define([
             }
 
             this.clear();
+            this.param.groupedByTestrun = false;
 
             // let's get some data
             var data = {
@@ -121,6 +122,11 @@ define([
 
                 for(var i = 0; i < coordsByRun.length; ++i) {
 
+                    // skip if no coords available
+                    if(!coordsByRun[i].length) {
+                        continue;
+                    }
+
                     canvas = document.createElement('canvas');
                     canvas.height = screenshot.get(0).height;
                     canvas.width  = screenshot.get(0).width;
@@ -128,11 +134,7 @@ define([
                     ctx.fillStyle = 'rgb(200,0,0)';
 
                     this.$el.append(canvas);
-
-                    setTimeout(function() {
-                        this.context.drawLine( ctx , coordsByRun[this.i] , 1 , coordsByRun[this.i][0] );
-                    }.bind({context:this,i:i}),2000);
-                    
+                    this.drawLine( ctx , coordsByRun[i] , 1 , coordsByRun[i][0] );
                 }
 
             }.bind(this));
@@ -145,12 +147,26 @@ define([
                 return;
             }
 
+            // skip point if x and y is NaN or
+            // if time difference is to big, the event originates from new page visit
+            if(isNaN(currentPoint.x) || isNaN(currentPoint.y) ||
+              (coords[index].timestamp - currentPoint.timestamp) > 200) {
+                currentPoint = coords[index];
+                ++index;
+            }
+
+            // the double IF statement maybe looks wired but is the only way to do it
+            if(!coords[index]) {
+                return;
+            }
+
             var that = this,
                 targetPoint = coords[index],
 
                 tx = targetPoint.x - currentPoint.x,
                 ty = targetPoint.y - currentPoint.y,
                 dist = Math.sqrt(tx*tx+ty*ty),
+                timeDiff = (targetPoint.timestamp - coords[index-1].timestamp) / dist,
 
                 velX = (tx/dist)*1,
                 velY = (ty/dist)*1;
@@ -160,11 +176,17 @@ define([
 
             ctx.fillRect(currentPoint.x, currentPoint.y, 1, 1);
             if(Math.abs(currentPoint.x - targetPoint.x) > 1 && Math.abs(currentPoint.y - targetPoint.y) > 1) {
+
                 setTimeout(function() {
                     that.drawLine(ctx,coords,index,currentPoint);
-                }, (targetPoint.timestamp - currentPoint.timestamp) / dist);
+                }, timeDiff);
+
             } else {
-                this.drawLine(ctx,coords,++index,targetPoint);
+
+                setTimeout(function() {
+                    currentPoint.timestamp = targetPoint.timestamp;
+                    that.drawLine(ctx,coords,++index,currentPoint);
+                }, timeDiff);
             }
 
         },

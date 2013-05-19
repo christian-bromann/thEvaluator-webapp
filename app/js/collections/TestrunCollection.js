@@ -52,7 +52,7 @@ define([
                     var x   = this.models[i][type][j].x * ratio,
                         y   = this.models[i][type][j].y * ratio,
                         url = this.models[i][type][j].url,
-                        timestamp = this.models[i][type][j].timestamp;
+                        timestamp = new Date(this.models[i][type][j].timestamp).getTime();
 
                     // neglect {0,0} coords  
                     if((x === 0 && y === 0) || (opts.url && opts.url !== this.models[i][type][j].url)) {
