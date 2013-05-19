@@ -5,9 +5,9 @@
             <span class="caret"></span>
         </button>
         <ul class="dropdown-menu testcaseList">
+            <li><a href="#!/clickmap">Clickmap</a></li>
             <li><a href="#!/heatmap">Heatmap</a></li>
-            <li><a href="#!/movemap">Movemap</a></li>
-            <li><a href="#!/both">Both</a></li>
+            <li><a href="#!/heatmap-timelapse">Heatmap (time-lapse)</a></li>
         </ul>
     </div>
 

@@ -13,8 +13,9 @@ define([
         el: '.heatmap .content',
         events: {
             'click a':'switchLabel',
+            'click a[href="#!/clickmap"]': 'renderClickmap',
             'click a[href="#!/heatmap"]': 'renderHeatmap',
-            'click a[href="#!/movemap"]': 'renderMovemap',
+            'click a[href="#!/heatmap-timelapse"]': 'renderTimelapse',
             'click a[href="#!/both"]': 'both',
             'click .pageList a': 'switchPage',
             'click .idList a': 'switchID'
@@ -65,16 +66,23 @@ define([
 
             $(e.target).parents('.btn-group').find('>.btn:first-Child').html(label);
         },
+        renderClickmap: function() {
+            this.view = 'renderClickmap';
+            this.renderMap('clicks');
+        },
         renderHeatmap: function() {
-
             this.view = 'renderHeatmap';
+            this.renderMap('moves');
+        },
+        renderMap: function(type) {
+
+            this.clear();
 
             if(!this.param.url) {
-                this.clear();
                 return;
             }
 
-            this.clear();
+            this.param.type = type || 'moves';
             this.param.groupedByTestrun = false;
 
             // let's get some data
@@ -93,10 +101,9 @@ define([
                 this.heatmap = window.heatmapFactory.create(this.config);
                 this.heatmap.store.setDataSet(data);
             }.bind(this));
-
         },
-        renderMovemap: function() {
-            this.view = 'renderMovemap';
+        renderTimelapse: function() {
+            this.view = 'renderTimelapse';
 
             if(!this.param.url) {
                 this.clear();
@@ -118,6 +125,8 @@ define([
 
                 var coordsByRun = this.testrunCollection.getEventCoordinates(this.param),
                     canvas,ctx;
+
+                this.heatmap = window.heatmapFactory.create(this.config);
 
                 for(var i = 0; i < coordsByRun.length; ++i) {
 
@@ -173,6 +182,7 @@ define([
             currentPoint.x += velX;
             currentPoint.y += velY;
 
+            this.heatmap.store.addDataPoint(currentPoint.x, currentPoint.y);
             ctx.fillRect(currentPoint.x, currentPoint.y, 1, 1);
             if(Math.abs(currentPoint.x - targetPoint.x) > 1 && Math.abs(currentPoint.y - targetPoint.y) > 1) {
 
