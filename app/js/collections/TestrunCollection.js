@@ -97,60 +97,30 @@ define([
             return ret;
         },
         getStepsCount: function() {
-            var click,
-                maxSteps = 0,
-                minSteps,
-                maxTime = 0,
-                minTime,
+
+            var numberOfTestruns = this.models.length,
+                pagevisits = {},
+                steps      = 0,
                 stepsCount = 0,
-                timeCount = 0,
-                mostViewed = {},
-                currentUrl = '',
-                timeNeeded = 0,
-                startTime = 0,
-                endTime = 0,
-                steps = 0,
-                successfulTestruns = 0;
+                maxSteps   = 0,
+                minSteps   = 0,
+                timeCount  = 0,
+                maxTime    = 0,
+                minTime    = 0,
+                duration   = 0,
+                visit,moves;
 
-            // iterate through testruns
-            for(var i = 0; i < this.models.length; ++i) {
+            for(var i = 0; i < numberOfTestruns; ++i) {
 
-                if(!this.models[i].clicks || !this.models[i].clicks.length || this.models[i].status !== 1) {
-                    if(this.models[i].status === 1) {
-                        successfulTestruns++;
-                    }
+                steps = this.models[i].visits.length;
+
+                // skip testrun if there are no steps
+                if(steps === 0) {
                     continue;
                 }
-                successfulTestruns++;
 
-                currentUrl = '';
-                steps = 0;
-                for(var j = 0; j < this.models[i].clicks.length; ++j) {
-                    click = this.models[i].clicks[j];
-
-                    if(currentUrl !== click.url) {
-                        steps++;
-                        currentUrl = click.url;
-                    }
-
-                    if(mostViewed[click.url]) {
-                        mostViewed[click.url]++;
-                    } else {
-                        mostViewed[click.url] = 1;
-                    }
-                }
-
-                startTime = new Date(this.models[i].clicks[0].timestamp).getTime();
-                endTime = new Date(this.models[i].clicks[this.models[i].clicks.length-1].timestamp).getTime();
-                timeNeeded = Math.round((endTime - startTime)/100) / 10;
-
-                if(timeNeeded > maxTime) {
-                    maxTime = timeNeeded;
-                }
-                if(!minTime || timeNeeded < minTime) {
-                    minTime = timeNeeded;
-                }
-                timeCount += timeNeeded;
+                moves = this.models[i].moves;
+                stepsCount += steps;
 
                 if(steps > maxSteps) {
                     maxSteps = steps;
@@ -158,7 +128,31 @@ define([
                 if(!minSteps || steps < minSteps) {
                     minSteps = steps;
                 }
-                stepsCount += steps;
+
+                if(moves.length && this.models[i].status === 1) {
+                    duration = new Date(moves[moves.length - 1].timestamp).getTime() / 1000 - new Date(moves[0].timestamp).getTime() / 1000;
+                    timeCount += duration;
+
+                    if(duration > maxTime) {
+                        maxTime = duration;
+                    }
+                    if(!minTime || duration < minTime) {
+                        minTime = duration;
+                    }
+
+                }
+
+                for(var j = 0; j < steps; ++j) {
+
+                    visit = this.models[i].visits[j];
+
+                    if(pagevisits[visit.url]) {
+                        pagevisits[visit.url]++;
+                    } else {
+                        pagevisits[visit.url] = 1;
+                    }
+
+                }
             }
 
             function sortByValue(object) {
@@ -173,8 +167,8 @@ define([
                 maxTime: maxTime,
                 minTime: minTime,
                 timeCount: timeCount,
-                mostViewed: sortByValue(mostViewed),
-                testruns: successfulTestruns
+                mostViewed: sortByValue(pagevisits),
+                testruns: numberOfTestruns
             };
         },
         countStatusTypes: function() {
