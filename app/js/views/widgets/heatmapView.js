@@ -75,14 +75,13 @@ define([
             this.renderMap('moves');
         },
         renderMap: function(type) {
-
             this.clear();
 
             if(!this.param.url) {
                 return;
             }
 
-            this.param.type = type || 'moves';
+            this.param.type = type;
             this.param.groupedByTestrun = false;
 
             // let's get some data
@@ -91,36 +90,26 @@ define([
                 data: this.testrunCollection.getEventCoordinates(this.param)
             };
 
-            // render screenshot
-            this.$el.find('.screenshot').remove();
-            var screenshot = $('<img />').addClass('screenshot');
-            screenshot.attr('src','http://localhost:9001/api/testcase/' + this.testcase.id + '/screenshot.jpg?url=' + encodeURIComponent(this.param.url));
-            this.$el.append(screenshot);
+            this.createScreenshot().load(function() {
 
-            screenshot.load(function() {
                 this.heatmap = window.heatmapFactory.create(this.config);
                 this.heatmap.store.setDataSet(data);
+
             }.bind(this));
         },
         renderTimelapse: function() {
+
             this.view = 'renderTimelapse';
+            this.clear();
 
             if(!this.param.url) {
-                this.clear();
                 return;
             }
-
-            this.clear();
 
             this.param.type = 'moves';
             this.param.groupedByTestrun = true;
 
-            // render screenshot
-            this.$el.find('.screenshot').remove();
-            var screenshot = $('<img />').addClass('screenshot');
-            screenshot.attr('src','http://localhost:9001/api/testcase/' + this.testcase.id + '/screenshot.jpg?url=' + encodeURIComponent(this.param.url));
-            this.$el.append(screenshot);
-
+            var screenshot = this.createScreenshot();
             screenshot.load(function() {
 
                 var coordsByRun = this.testrunCollection.getEventCoordinates(this.param),
@@ -182,7 +171,6 @@ define([
             currentPoint.x += velX;
             currentPoint.y += velY;
 
-            this.heatmap.store.addDataPoint(currentPoint.x, currentPoint.y);
             ctx.fillRect(currentPoint.x, currentPoint.y, 1, 1);
             if(Math.abs(currentPoint.x - targetPoint.x) > 1 && Math.abs(currentPoint.y - targetPoint.y) > 1) {
 
@@ -199,9 +187,19 @@ define([
             }
 
         },
-        clear: function() {
-            this.$el.find('canvas').remove();
+        createScreenshot: function() {
+            // render screenshot
             this.$el.find('.screenshot').remove();
+            var screenshot = $('<img />').addClass('screenshot');
+            screenshot.attr('src','http://localhost:9001/api/testcase/' + this.testcase.id + '/screenshot.jpg?url=' + encodeURIComponent(this.param.url));
+            this.$el.append(screenshot);
+
+            return screenshot;
+        },
+        clear: function() {
+            delete this.heatmap;
+            this.$el.find('canvas').unbind().remove();
+            this.$el.find('.screenshot').unbind().remove();
         },
         switchPage: function(e) {
             var elem = $(e.target);
