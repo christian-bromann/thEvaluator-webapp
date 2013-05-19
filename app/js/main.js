@@ -14,8 +14,11 @@ require.config({
             exports: 'Backbone'
         },
         bootstrapDropdown: {
-            deps: ['jquery','jqueryui'],
+            deps: ['jquery'],
             exports: 'jquery'
+        },
+        jqueryui: {
+            deps: ['jquery']
         }
     },
     paths: {

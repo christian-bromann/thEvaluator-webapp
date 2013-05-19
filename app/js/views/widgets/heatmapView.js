@@ -112,13 +112,11 @@ define([
                 this.$el.find('nav').append('<small>Calculating... <em>0%</em></small>');
                 setTimeout(function() {
                     this.calculateRun(0);
-                }.bind(this), 100);
+                }.bind(this), 0);
 
             }.bind(this));
         },
         calculateRun: function(index) {
-
-            console.log('calculate testrund %d',index);
 
             // skip if no coords available
             if(!this.coordsByRun[index].length) {
@@ -254,7 +252,7 @@ define([
                 } else {
                     this.calculateRun(this.calculatedRuns);
                 }
-            }.bind(this),100);
+            }.bind(this),0);
         },
         createScreenshot: function() {
             // render screenshot
