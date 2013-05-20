@@ -9,8 +9,9 @@ define([
     // widgets
     'views/widgets/heatmapView',
     'views/widgets/geoDataView',
-    'views/widgets/resultsView'
-], function( $, _, Backbone, TestrunCollection, Testcase, HeatmapWidget, GeoDataWidget, ResultsWidget) {
+    'views/widgets/resultsView',
+    'views/widgets/walkPathsView'
+], function( $, _, Backbone, TestrunCollection, Testcase, HeatmapWidget, GeoDataWidget, ResultsWidget, WalkPathsWidget) {
 
     'use strict';
 
@@ -44,6 +45,7 @@ define([
                 this.widgets.push(new HeatmapWidget(this.testrunCollection,this.testcase));
                 this.widgets.push(new GeoDataWidget(this.testrunCollection,this.testcase));
                 this.widgets.push(new ResultsWidget(this.testrunCollection,this.testcase));
+                this.widgets.push(new WalkPathsWidget(this.testrunCollection,this.testcase));
             }.bind(this));
         }
 

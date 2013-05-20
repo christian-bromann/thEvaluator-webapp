@@ -29,6 +29,7 @@ require.config({
         backbone: '../components/backbone-amd/backbone',
         underscore: '../components/underscore-amd/underscore',
         heatmapjs: '../components/heatmapjs/heatmap',
+        d3: '../components/d3/d3.min',
 
         // requirejs plugins
         text: '../components/text/text',

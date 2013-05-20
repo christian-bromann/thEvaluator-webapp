@@ -11,6 +11,11 @@
     <div class="content"></div>
 </div>
 
+<div class="widget walkPaths">
+    <h3>Walkpaths</h3>
+    <div class="content"></div>
+</div>
+
 <div class="widget geoData">
     <h3>Participients By Country</h3>
     <div class="content">

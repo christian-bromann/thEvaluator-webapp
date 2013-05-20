@@ -171,36 +171,6 @@ body {
     margin: 20px 0 0;
 }
 
-.heatmap {
-
-    .content {
-        position: relative;
-        padding-bottom: 10px;
-
-        nav {
-            width: 96%;
-            padding: 5px 19px;
-            background: #BBB;
-            border-bottom: #1b1b1b 1px solid;
-            position: relative;
-        }
-
-        .dropdown-menu {
-            z-index: 9999999999;
-        }
-
-        canvas {
-            position: absolute;
-            left: 0;
-            top: 41px!important;
-        }
-
-        .clear {
-            display: none;
-        }
-    }
-}
-
 .widget {
     margin: 10px 0;
 
@@ -229,6 +199,18 @@ body {
 
         &.nocontent {
             padding: 20px;
+        }
+
+        nav {
+            width: 96%;
+            padding: 5px 19px;
+            background: #BBB;
+            border-bottom: #1b1b1b 1px solid;
+            position: relative;
+        }
+
+        .dropdown-menu {
+            z-index: 9999999999;
         }
     }
 }
@@ -260,4 +242,31 @@ body {
             width: 50%;
         }
     }
+}
+
+.heatmap {
+
+    .content {
+        position: relative;
+        padding-bottom: 10px;
+
+        canvas {
+            position: absolute;
+            left: 0;
+            top: 41px!important;
+        }
+
+        .clear {
+            display: none;
+        }
+    }
+}
+
+.walkPaths {
+
+    .content {
+        position: relative;
+        padding-bottom: 10px;
+    }
+
 }
