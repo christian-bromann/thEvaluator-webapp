@@ -17,19 +17,21 @@ require.config({
             deps: ['jquery'],
             exports: 'jquery'
         },
-        jqueryui: {
+        jqueryuiSortable: {
             deps: ['jquery']
         }
     },
     paths: {
-        // libraries
+        // components
         jquery: '../components/jquery/jquery',
-        jqueryui: '../components/jquery-ui/jquery-ui',
         bootstrapDropdown: '../components/sass-bootstrap/js/bootstrap-dropdown',
         backbone: '../components/backbone-amd/backbone',
         underscore: '../components/underscore-amd/underscore',
-        heatmapjs: '../components/heatmapjs/heatmap',
         d3: '../components/d3/d3.min',
+
+        // libraries
+        jqueryuiSortable: '../components/vendor/jquery-ui-1.10.3.sortable.min',
+        heatmapjs: '../components/vendor/heatmap',
 
         // requirejs plugins
         text: '../components/text/text',

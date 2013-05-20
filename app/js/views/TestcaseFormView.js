@@ -12,7 +12,7 @@ define([
     'text!/templates/CookieForm.tpl',
     'text!/templates/TaskForm.tpl',
     'text!/templates/TaskListItem.tpl',
-    'jqueryui',
+    'jqueryuiSortable',
 ], function ($, _, Backbone, Alert, Testcase, Task, TestCaseCollection, view, cookieInput, taskInput, taskListItem) {
     'use strict';
 
@@ -236,7 +236,6 @@ define([
                 } else {
                     task = new Task(data);
                     this.tasks.push(task);
-                    console.log(this.tasks);
                     el.remove();
                     $('.tasks').append(this.getTaskListTemplate(task));
                 }
