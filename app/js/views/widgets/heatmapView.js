@@ -60,9 +60,15 @@ define([
                 if(this[this.view]) {
                     this[this.view]();
                 }
+
+                this.$el.find('.choose').show();
             }
 
             var label = $(e.target).data('placeholder') ? $(e.target).data('placeholder') : $(e.target).html();
+
+            if(label.indexOf('http') === 0) {
+                label = this.sanitize(label);
+            }
 
             $(e.target).parents('.btn-group').find('>.btn:first-Child').html(label);
         },
@@ -74,6 +80,7 @@ define([
                 return;
             }
 
+            this.$el.find('.choose').hide();
             this.param.type = 'clicks';
             this.param.groupedByTestrun = false;
 
@@ -98,6 +105,7 @@ define([
                 return;
             }
 
+            this.$el.find('.choose').hide();
             this.param.type = 'moves';
             this.param.groupedByTestrun = true;
 
@@ -135,6 +143,7 @@ define([
                 return;
             }
 
+            this.$el.find('.choose').hide();
             this.param.type = 'moves';
             this.param.groupedByTestrun = true;
 
@@ -221,7 +230,7 @@ define([
                 if(ctx) {
                     setTimeout(function() {
                         that.drawLine(ctx,coords,index,currentPoint);
-                    }, timeDiff / 2);
+                    }, timeDiff);
                 } else {
                     that.drawLine(ctx,coords,index,currentPoint);
                 }
@@ -232,7 +241,7 @@ define([
                     setTimeout(function() {
                         currentPoint.timestamp = targetPoint.timestamp;
                         that.drawLine(ctx,coords,++index,currentPoint);
-                    }, timeDiff / 2);
+                    }, timeDiff);
                 } else {
                     currentPoint.timestamp = targetPoint.timestamp;
                     that.drawLine(ctx,coords,++index,currentPoint);
@@ -284,6 +293,16 @@ define([
             if(this[this.view]) {
                 this[this.view]();
             }
+        },
+        sanitize: function(url) {
+            url = url.replace('http://','').replace('https://','');
+            url = url.slice(url.indexOf('/'));
+
+            if(url.length > 20) {
+                url = url.slice(0,18)+'...';
+            }
+
+            return url;
         }
     });
 

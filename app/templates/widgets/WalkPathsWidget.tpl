@@ -11,3 +11,5 @@
         </ul>
     </div>
 </nav>
+
+<i class="nocontent">Please choose a task!</i>

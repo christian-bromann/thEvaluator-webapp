@@ -201,6 +201,11 @@ body {
             padding: 20px;
         }
 
+        .nocontent {
+            display: block;
+            padding: 20px 20px 0;
+        }
+
         nav {
             width: 96%;
             padding: 5px 19px;
@@ -267,11 +272,6 @@ body {
     .content {
         position: relative;
         padding-bottom: 10px;
-
-        .nocontent {
-            display: block;
-            padding: 20px 20px 0;
-        }
 
         svg {
             position: relative;

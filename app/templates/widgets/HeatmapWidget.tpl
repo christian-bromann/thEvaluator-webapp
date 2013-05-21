@@ -37,3 +37,5 @@
         </ul>
     </div>-->
 </nav>
+
+<i class="nocontent choose">Please choose a view and page option!</i>
