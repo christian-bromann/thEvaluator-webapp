@@ -30,6 +30,7 @@ define([
                 w = 940 - m[1] - m[3],
                 h = 800 - m[0] - m[2];
 
+            this.maxWidth = 750;
             this.finishedInitialization = false;
             this.$el.find('svg').remove();
 
@@ -58,8 +59,6 @@ define([
             this.update(this.root);
             this.finishedInitialization = true;
 
-            console.log(this.root);
-
         },
         update: function(source) {
             var i = 0,
@@ -80,17 +79,27 @@ define([
             var nodeEnter = node.enter().append('svg:g')
                 .attr('class', 'node')
                 .attr('transform', function() { return 'translate(' + source.y0 + ',' + source.x0 + ')'; })
-                .on('click', function(d) { that.toggle(d); that.update(d); });
+                .on('click', function(d) { that.toggle(d); that.update(d); })
+                .on('mouseenter', this.showUrl)
+                .on('mouseleave', this.hideUrl);
 
             nodeEnter.append('svg:circle')
                 .attr('r', function(d) { return (Math.round(d.marching/runCnt * 20))+'px'; })
                 .style('fill', function(d) { return d._children && d._children.length ? 'lightsteelblue' : '#fff'; });
 
+            nodeEnter.append('svg:rect')
+                .attr('x', function(d) { return d.children || d._children ? -16 : 16; })
+                .attr('y', function(d) { return d.children || d._children ? -35 : 35; })
+                .attr('height', 23)
+                .attr('width', 150)
+                .attr('rx', 3)
+                .attr('ry', 3);
+
             nodeEnter.append('svg:text')
                 .attr('x', function(d) { return d.children || d._children ? -10 : 10; })
-                .attr('y', function(d) { return d.children || d._children ? -10 : 10; })
+                .attr('y', function(d) { return d.children || d._children ? -23 : 23; })
                 .attr('dy', '.35em')
-                .attr('text-anchor', function(d) { return d.children || d._children ? 'end' : 'start'; })
+                .attr('text-anchor', function(d) { return d.children || d._children ? 'start' : 'start'; })
                 .text(function(d) { return that.sanitize(d.name); })
                 .style('fill-opacity', 1e-6);
 
@@ -177,20 +186,20 @@ define([
             var svg   = this.$el.find('svg'),
                 width = parseInt(svg.attr('width'),10);
 
-            if(openAction && this.maxXPos > 900) {
+            if(openAction && this.maxXPos > this.maxWidth) {
                 svg.animate({
-                    left: 900 - this.maxXPos
+                    left: this.maxWidth - this.maxXPos
                 },500);
-                svg.attr('width',this.maxXPos+100);
+                svg.attr('width',this.maxXPos+200);
             }
 
-            if(this.maxXPos < 900 && parseInt(svg.css('width'),10) > 900) {
+            if(this.maxXPos < this.maxWidth && parseInt(svg.css('width'),10) > this.maxWidth) {
                 svg.animate({
                     left: 0
                 },500);
-            } else if(!openAction && this.maxXPos > 900 && width > this.maxXPos) {
+            } else if(!openAction && this.maxXPos > this.maxWidth && width > this.maxXPos) {
                 svg.animate({
-                    left: -(this.maxXPos - 900)
+                    left: -(this.maxXPos - this.maxWidth)
                 },500);
             }
 
@@ -207,7 +216,13 @@ define([
         },
         sanitize: function(url) {
             url = url.replace('http://','').replace('https://','');
-            return url.slice(url.indexOf('/'));
+            url = url.slice(url.indexOf('/'));
+
+            if(url.length > 20) {
+                url = url.slice(0,18)+'...';
+            }
+
+            return url;
         },
         switchLabel: function(e) {
             var label = $(e.target).data('placeholder') ? $(e.target).data('placeholder') : $(e.target).html(),
@@ -217,6 +232,23 @@ define([
             this.$el.find('i').remove();
             this.$el.css('overflow','hidden');
             this.buildTree(id);
+        },
+        showUrl:function(d) {
+            d3.select(this).select('text').text(function() {return d.name;});
+
+            var width = $(this).find('text').width() + 13;
+            $(this).find('rect').attr('width',width > 150 ? width : 150);
+        },
+        hideUrl:function(d) {
+            var url = d.name.replace('http://','').replace('https://','');
+            url = url.slice(url.indexOf('/'));
+
+            if(url.length > 20) {
+                url = url.slice(0,18)+'...';
+            }
+
+            d3.select(this).select('text').text(function() {return url;});
+            $(this).find('rect').attr('width',150);
         }
     });
 

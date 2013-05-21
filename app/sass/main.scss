@@ -276,15 +276,23 @@ body {
         svg {
             position: relative;
 
-            .node circle {
-                cursor: pointer;
-                fill: #fff;
-                stroke: steelblue;
-                stroke-width: 1.5px;
-            }
-
-            .node text {
-                font-size: 11px;
+            .node {
+                circle {
+                    cursor: pointer;
+                    fill: #fff;
+                    stroke: steelblue;
+                    stroke-width: 1.5px;
+                }                
+                text {
+                    font-size: 13px;
+                    fill: #333333;
+                    cursor: pointer;
+                }
+                rect {
+                    stroke: #b0c4de;
+                    fill: #e6e6e6;
+                    cursor: pointer;
+                }
             }
 
             path.link {
