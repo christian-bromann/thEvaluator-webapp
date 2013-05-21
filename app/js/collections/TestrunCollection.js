@@ -211,6 +211,7 @@ define([
                 children = this.generateTree([],visits,++index,taskID);
                 newChild = {
                     name: visit.url,
+                    marching: 1,
                     children: children ? children : []
                 };
 
@@ -222,6 +223,8 @@ define([
                 for(var i = 0; childs && i < childs.length; ++i) {
                     if(childs[i].name === visit.url) {
                         childs[i].children = this.generateTree(childs[i].children,visits,++index,taskID);
+                        childs[i].marching++;
+
                         return childs;
                     }
                 }
@@ -229,6 +232,7 @@ define([
                 children = this.generateTree([],visits,++index,taskID);
                 newChild = {
                     name: visit.url,
+                    marching: 1,
                     children: children ? children : []
                 };
                 childs.push(newChild);

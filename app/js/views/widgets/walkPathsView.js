@@ -26,7 +26,7 @@ define([
             this.$el.prepend(_.template( template, content));
         },
         buildTree: function(id) {
-            var m = [20, 20, 20, 20],
+            var m = [30, 30, 30, 30],
                 w = 940 - m[1] - m[3],
                 h = 800 - m[0] - m[2];
 
@@ -57,10 +57,14 @@ define([
             this.root.children.forEach(this.toggleAll.bind(this));
             this.update(this.root);
             this.finishedInitialization = true;
+
+            console.log(this.root);
+
         },
         update: function(source) {
             var i = 0,
                 that = this,
+                runCnt = this.testrunCollection.models.length,
                 duration = d3.event && d3.event.altKey ? 5000 : 500;
 
             // Compute the new tree layout.
@@ -79,8 +83,8 @@ define([
                 .on('click', function(d) { that.toggle(d); that.update(d); });
 
             nodeEnter.append('svg:circle')
-                .attr('r', 1e-6)
-                .style('fill', function(d) { return d._children ? 'lightsteelblue' : '#fff'; });
+                .attr('r', function(d) { return (Math.round(d.marching/runCnt * 20))+'px'; })
+                .style('fill', function(d) { return d._children && d._children.length ? 'lightsteelblue' : '#fff'; });
 
             nodeEnter.append('svg:text')
                 .attr('x', function(d) { return d.children || d._children ? -10 : 10; })
@@ -95,7 +99,7 @@ define([
                 .duration(duration)
                 .attr('transform', function(d) { return 'translate(' + d.y + ',' + d.x + ')'; });
 
-            nodeUpdate.select('circle').attr('r', 4.5).style('fill', function(d) { return d._children ? 'lightsteelblue' : '#fff'; });
+            nodeUpdate.select('circle').style('fill', function(d) { return d._children && d._children.length ? 'lightsteelblue' : '#fff'; });
             nodeUpdate.select('text').style('fill-opacity', 1);
 
             // Transition exiting nodes to the parent's new position.
@@ -104,7 +108,6 @@ define([
                 .attr('transform', function() { return 'translate(' + source.y + ',' + source.x + ')'; })
                 .remove();
 
-            nodeExit.select('circle').attr('r', 1e-6);
             nodeExit.select('text').style('fill-opacity', 1e-6);
 
             // Update the links…
@@ -113,6 +116,7 @@ define([
             // Enter any new links at the parent's previous position.
             link.enter().insert('svg:path', 'g')
                 .attr('class', 'link')
+                .style('stroke-width', function(d) { return (Math.round(d.target.marching/runCnt * 40))+'px'; })
                 .attr('d', function() {
                     var o = {x: source.x0, y: source.y0};
                     return that.diagonal({source: o, target: o});
@@ -123,6 +127,7 @@ define([
 
             // Transition links to their new position.
             link.transition()
+                .style('stroke-width', function(d) { return (Math.round(d.marching/runCnt * 40))+'px'; })
                 .duration(duration)
                 .attr('d', that.diagonal);
 
