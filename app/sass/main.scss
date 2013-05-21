@@ -267,6 +267,32 @@ body {
     .content {
         position: relative;
         padding-bottom: 10px;
+
+        .nocontent {
+            display: block;
+            padding: 20px 20px 0;
+        }
+
+        svg {
+            position: relative;
+
+            .node circle {
+                cursor: pointer;
+                fill: #fff;
+                stroke: steelblue;
+                stroke-width: 1.5px;
+            }
+
+            .node text {
+                font-size: 11px;
+            }
+
+            path.link {
+                fill: none;
+                stroke: #ccc;
+                stroke-width: 1.5px;
+            }
+        }
     }
 
 }

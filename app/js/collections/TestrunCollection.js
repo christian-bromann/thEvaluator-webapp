@@ -180,6 +180,62 @@ define([
             }
 
             return ret;
+        },
+        generateWalkPath: function(taskID) {
+            var ret = [],
+                visitsByTaskID;
+
+            for(var i = 0; i < this.models.length; ++i) {
+
+                visitsByTaskID = _.filter(this.models[i].visits.slice(0), function(visit) {
+                    return visit.task === taskID;
+                });
+
+                if(visitsByTaskID && visitsByTaskID.length === 0) {
+                    continue;
+                }
+
+                ret = this.generateTree(ret,visitsByTaskID,0,taskID);
+            }
+            return ret[0];
+        },
+        generateTree: function(childs,visits,index,taskID) {
+
+            var visit = visits[index],
+                newChild, children;
+
+            if(!visit) {
+                return;
+            } else if(childs && childs.length === 0) {
+
+                children = this.generateTree([],visits,++index,taskID);
+                newChild = {
+                    name: visit.url,
+                    children: children ? children : []
+                };
+
+                childs.push(newChild);
+                return childs;
+
+            } else {
+
+                for(var i = 0; childs && i < childs.length; ++i) {
+                    if(childs[i].name === visit.url) {
+                        childs[i].children = this.generateTree(childs[i].children,visits,++index,taskID);
+                        return childs;
+                    }
+                }
+
+                children = this.generateTree([],visits,++index,taskID);
+                newChild = {
+                    name: visit.url,
+                    children: children ? children : []
+                };
+                childs.push(newChild);
+                return childs;
+
+            }
+
         }
     });
 

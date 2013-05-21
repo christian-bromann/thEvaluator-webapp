@@ -6,7 +6,7 @@
         </button>
         <ul class="dropdown-menu testcaseList pageList">
             <% for(var i = 0; i < tasks.length; ++i) { %>
-            <li><a href="#!/<%=encodeURIComponent(tasks[i].name)%>"><%=tasks[i].name%></a></li>
+            <li><a href="#!/<%=encodeURIComponent(tasks[i]._id)%>"><%=tasks[i].name%></a></li>
             <% } %>
         </ul>
     </div>
