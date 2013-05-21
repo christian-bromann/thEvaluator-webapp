@@ -4,8 +4,8 @@ define([
     'jquery',
     'underscore',
     'backbone',
-    'text!/templates/Evaluate.tpl',
-    'text!/templates/TestcaseOptionView.tpl',
+    'text!templates/Evaluate.tpl',
+    'text!templates/TestcaseOptionView.tpl',
     'collections/TestcaseCollection',
     'bootstrapDropdown'
 ], function ($, _, Backbone, template, testcaseOptionTemplate, TestCaseCollection) {

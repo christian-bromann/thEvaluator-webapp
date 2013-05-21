@@ -4,7 +4,7 @@ define([
     'jquery',
     'underscore',
     'backbone',
-    'text!/templates/Start.tpl',
+    'text!templates/Start.tpl',
     'views/TestcaseListView',
     'collections/TestcaseCollection'
 ], function ($, _, Backbone, template, TestCaseListView, TestCaseCollection) {

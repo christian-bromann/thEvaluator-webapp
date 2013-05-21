@@ -4,7 +4,7 @@ define([
     'jquery',
     'underscore',
     'backbone',
-    'text!/templates/EvaluateTestcase.tpl',
+    'text!templates/EvaluateTestcase.tpl',
     'controllers/evaluation'
 ], function ($, _, Backbone, template, Evaluation) {
     'use strict';

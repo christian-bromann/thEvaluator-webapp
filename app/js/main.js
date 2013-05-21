@@ -42,6 +42,7 @@ require.config({
         // application files
         application: 'controllers/app',
         router: 'router',
+        templates: '../templates'
     }
 });
 

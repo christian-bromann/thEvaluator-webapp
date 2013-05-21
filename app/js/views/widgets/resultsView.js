@@ -4,7 +4,7 @@ define([
     'jquery',
     'underscore',
     'views/WidgetView',
-    'text!/templates/widgets/ResultsWidget.tpl',
+    'text!templates/widgets/ResultsWidget.tpl',
     'goog!visualization,1,packages:[geochart,corechart]'
 ], function ($, _, WidgetView, template) {
     'use strict';

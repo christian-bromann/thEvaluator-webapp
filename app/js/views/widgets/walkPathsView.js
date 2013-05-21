@@ -4,7 +4,7 @@ define([
     'jquery',
     'underscore',
     'views/WidgetView',
-    'text!/templates/widgets/WalkPathsWidget.tpl',
+    'text!templates/widgets/WalkPathsWidget.tpl',
     'd3'
 ], function ($, _, WidgetView, template) {
     'use strict';

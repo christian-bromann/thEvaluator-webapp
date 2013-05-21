@@ -4,8 +4,8 @@ define([
     'jquery',
     'underscore',
     'backbone',
-    'text!/templates/TestcaseList.tpl',
-    'text!/templates/TestcaseListItem.tpl'
+    'text!templates/TestcaseList.tpl',
+    'text!templates/TestcaseListItem.tpl'
 ], function ($, _, Backbone, testcaseList, testcaseItem) {
     'use strict';
 

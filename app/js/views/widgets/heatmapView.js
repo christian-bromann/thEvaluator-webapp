@@ -4,7 +4,7 @@ define([
     'jquery',
     'underscore',
     'views/WidgetView',
-    'text!/templates/widgets/HeatmapWidget.tpl',
+    'text!templates/widgets/HeatmapWidget.tpl',
     'heatmapjs'
 ], function ($, _, WidgetView, template) {
     'use strict';

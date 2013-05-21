@@ -8,10 +8,10 @@ define([
     'models/TestcaseModel',
     'models/TaskModel',
     'collections/TestcaseCollection',
-    'text!/templates/TestcaseForm.tpl',
-    'text!/templates/CookieForm.tpl',
-    'text!/templates/TaskForm.tpl',
-    'text!/templates/TaskListItem.tpl',
+    'text!templates/TestcaseForm.tpl',
+    'text!templates/CookieForm.tpl',
+    'text!templates/TaskForm.tpl',
+    'text!templates/TaskListItem.tpl',
     'jqueryuiSortable',
 ], function ($, _, Backbone, Alert, Testcase, Task, TestCaseCollection, view, cookieInput, taskInput, taskListItem) {
     'use strict';

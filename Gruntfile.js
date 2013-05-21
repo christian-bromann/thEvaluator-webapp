@@ -113,7 +113,7 @@ module.exports = function (grunt) {
             }
         },
         sass: {
-            dist: {
+            server: {
                 options: {
                     noCache: true,
                     unixNewlines: true,
@@ -122,6 +122,18 @@ module.exports = function (grunt) {
                 },
                 files: {
                     '<%= yeoman.app %>/all.min.css': '<%= yeoman.app %>/sass/main.scss'
+                }
+            },
+            dist: {
+                options: {
+                    noCache: true,
+                    unixNewlines: true,
+                    lineNumbers: true,
+                    loadPath: 'app/components',
+                    style: 'compressed'
+                },
+                files: {
+                    '<%= yeoman.dist %>/all.min.css': '<%= yeoman.app %>/sass/main.scss'
                 }
             }
         },
@@ -163,7 +175,7 @@ module.exports = function (grunt) {
         },
         usemin: {
             html: ['<%= yeoman.dist %>/{,*/}*.html'],
-            css: ['<%= yeoman.dist %>/sass/{,*/}*.css'],
+            css: ['<%= yeoman.dist %>/{,*/}*.css'],
             options: {
                 dirs: ['<%= yeoman.dist %>']
             }
@@ -236,10 +248,9 @@ module.exports = function (grunt) {
             }
         },
         concurrent: {
-            server: ['sass'],
-            test: ['sass'],
+            server: ['sass:server'],
             dist: [
-                'sass',
+                'sass:dist',
                 'imagemin',
                 'svgmin',
                 'htmlmin'
@@ -284,6 +295,7 @@ module.exports = function (grunt) {
         'useminPrepare',
         'concurrent:dist',
         'requirejs',
+        'sass:dist',
         'cssmin',
         'concat',
         'uglify',
