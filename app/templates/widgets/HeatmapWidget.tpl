@@ -24,18 +24,18 @@
         </ul>
     </div>
 
-    <!--<div class="btn-group">
-        <button class="btn">By Testrun</button>
-        <a class="btn" href="#!/" data-placeholder="By Testrun" data-param="testrun"><i class="icon-remove"></i></a>
+    <div class="btn-group testrunList">
+        <button class="btn drpdownLabel">By Testrun</button>
+        <a class="btn clear" href="#!/" data-placeholder="By Testrun" data-param="testrun"><i class="icon-remove"></i></a>
         <button class="btn dropdown-toggle" data-toggle="dropdown">
             <span class="caret"></span>
         </button>
         <ul class="dropdown-menu testcaseList idList">
             <% for(var i = 0; i < models.length; ++i) { %>
-            <li><a href="#!/<%=models[i]._id%>"><%=models[i].timestamp%></a></li>
+            <li class="<%=models[i]._id%>"><a href="#!/<%=models[i]._id%>"><%=models[i].timestamp%></a></li>
             <% } %>
         </ul>
-    </div>-->
+    </div>
 </nav>
 
 <i class="nocontent choose">Please choose a view and page option!</i>

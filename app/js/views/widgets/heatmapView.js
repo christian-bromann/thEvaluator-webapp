@@ -16,7 +16,6 @@ define([
             'click a[href="#!/clickmap"]': 'renderClickmap',
             'click a[href="#!/heatmap"]': 'renderHeatmap',
             'click a[href="#!/heatmap-timelapse"]': 'renderTimelapse',
-            'click a[href="#!/both"]': 'both',
             'click .pageList a': 'switchPage',
             'click .idList a': 'switchID'
         },
@@ -46,31 +45,6 @@ define([
 
             this.$el.prepend(_.template( template, content));
 
-        },
-        switchLabel: function(e) {
-
-            if(e.target.nodeName === 'I') {
-                e.target = $(e.target).parent();
-            }
-
-            if($(e.target).data('param')) {
-                delete this.param[$(e.target).data('param')];
-                $(e.target).css('display','none');
-
-                if(this[this.view]) {
-                    this[this.view]();
-                }
-
-                this.$el.find('.choose').show();
-            }
-
-            var label = $(e.target).data('placeholder') ? $(e.target).data('placeholder') : $(e.target).html();
-
-            if(label.indexOf('http') === 0) {
-                label = this.sanitize(label);
-            }
-
-            $(e.target).parents('.btn-group').find('>.btn:first-Child').html(label);
         },
         renderClickmap: function() {
             this.view = 'renderClickmap';
@@ -127,7 +101,7 @@ define([
         calculateRun: function(index) {
 
             // skip if no coords available
-            if(!this.coordsByRun[index].length) {
+            if(!this.coordsByRun[index] || !this.coordsByRun[index].length) {
                 this.finishedCalculatingTestrun();
                 return;
             }
@@ -158,7 +132,7 @@ define([
                 for(var i = 0; i < coordsByRun.length; ++i) {
 
                     // skip if no coords available
-                    if(!coordsByRun[i].length) {
+                    if(!coordsByRun[i] || !coordsByRun[i].length) {
                         continue;
                     }
 
@@ -277,6 +251,38 @@ define([
             this.$el.find('canvas').unbind().remove();
             this.$el.find('.screenshot').unbind().remove();
         },
+        switchLabel: function(e) {
+            var elem = $(e.target);
+
+            if(e.target.nodeName === 'I') {
+                elem = elem.parent();
+            }
+
+            if(elem.data('param')) {
+                delete this.param[elem.data('param')];
+                elem.css('display','none');
+
+                if(elem.data('param') === 'url') {
+                    var testrunList = $('.testrunList');
+                    testrunList.find('.clear').css('display','none');
+                    testrunList.find('.drpdownLabel').html('By Testrun');
+                    testrunList.hide();
+                    this.$el.find('.choose').show();
+                }
+
+                if(this[this.view]) {
+                    this[this.view]();
+                }
+            }
+
+            var label = elem.data('placeholder') ? elem.data('placeholder') : elem.html();
+
+            if(label.indexOf('http') === 0) {
+                label = this.sanitize(label);
+            }
+
+            elem.parents('.btn-group').find('>.btn:first-Child').html(label);
+        },
         switchPage: function(e) {
             var elem = $(e.target);
 
@@ -286,9 +292,16 @@ define([
             if(this[this.view]) {
                 this[this.view]();
             }
+
+            this.param.testrun = null;
+            this.updateTestrunList();
+            $('.testrunList').css('display','inline-block');
         },
         switchID: function(e) {
-            this.param.testrun = $(e.target).attr('href').substr(3);
+            var elem = $(e.target);
+
+            this.param.testrun = elem.attr('href').substr(3);
+            elem.parents('.btn-group').find('.clear').css('display','inline-block');
 
             if(this[this.view]) {
                 this[this.view]();
@@ -303,6 +316,25 @@ define([
             }
 
             return url;
+        },
+        updateTestrunList: function() {
+            var wasOnPage = false;
+
+            for(var i = 0; i < this.testrunCollection.models.length; ++i) {
+                wasOnPage = false;
+
+                for(var j = 0; j < this.testrunCollection.models[i].visits.length; ++j) {
+                    if(this.testrunCollection.models[i].visits[j].url === this.param.url) {
+                        wasOnPage = true;
+                    }
+                }
+
+                if(!wasOnPage) {
+                    $('.'+this.testrunCollection.models[i]._id).hide();
+                } else {
+                    $('.'+this.testrunCollection.models[i]._id).show();
+                }
+            }
         }
     });
 
