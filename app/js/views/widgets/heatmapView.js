@@ -16,6 +16,7 @@ define([
             'click a[href="#!/clickmap"]': 'renderClickmap',
             'click a[href="#!/heatmap"]': 'renderHeatmap',
             'click a[href="#!/heatmap-timelapse"]': 'renderTimelapse',
+            'click a[href="#!/gazespots"]': 'renderGazespots',
             'click .pageList a': 'switchPage',
             'click .idList a': 'switchID'
         },
@@ -98,16 +99,6 @@ define([
 
             }.bind(this));
         },
-        calculateRun: function(index) {
-
-            // skip if no coords available
-            if(!this.coordsByRun[index] || !this.coordsByRun[index].length) {
-                this.finishedCalculatingTestrun();
-                return;
-            }
-
-            this.drawLine( null , this.coordsByRun[index] , 1 , this.coordsByRun[index][0] );
-        },
         renderTimelapse: function() {
 
             this.view = 'renderTimelapse';
@@ -147,8 +138,60 @@ define([
                 }
 
             }.bind(this));
+        },
+        renderGazespots: function() {
+            this.view = 'renderGazespots';
+            this.clear();
 
+            if(!this.param.url) {
+                return;
+            }
 
+            this.$el.find('.choose').hide();
+            this.param.type = 'moves';
+            this.param.groupedByTestrun = true;
+
+            var currentRadius = this.config.radius;
+            this.config.radius = 20;
+
+            var screenshot = this.createScreenshot();
+            screenshot.load(function() {
+
+                var coordsByRun = this.testrunCollection.getEventCoordinates(this.param);
+                this.heatmap = window.heatmapFactory.create(this.config);
+                this.heatmap.toggleDisplay();
+
+                this.$el.find('nav').append('<small>Calculating... <em>0%</em></small>');
+
+                for(var i = 0; i < coordsByRun.length; ++i) {
+                    setTimeout(function() {
+                        this.ctx.$el.find('nav em').html(Math.round(this.i / (coordsByRun.length-1) * 10000)/100+'%');
+
+                        for(var j = 1; coordsByRun[this.i] && j < coordsByRun[this.i].length; ++j) {
+                            if(Math.abs(coordsByRun[this.i][j-1].x - coordsByRun[this.i][j].x) < 3 || Math.abs(coordsByRun[this.i][j-1].y - coordsByRun[this.i][j].y) < 3) {
+                                this.ctx.heatmap.store.addDataPoint(coordsByRun[this.i][j-1].x, coordsByRun[this.i][j-1].y);
+                            }
+                        }
+
+                        if(this.i === coordsByRun.length-1) {
+                            this.ctx.$el.find('nav small').delay(1000).fadeOut();
+                            this.ctx.config.radius = currentRadius;
+                            this.ctx.heatmap.toggleDisplay();
+                        }
+                    }.bind({ctx:this,i:i}),0);
+                }
+
+            }.bind(this));
+        },
+        calculateRun: function(index) {
+
+            // skip if no coords available
+            if(!this.coordsByRun[index] || !this.coordsByRun[index].length) {
+                this.finishedCalculatingTestrun();
+                return;
+            }
+
+            this.drawLine( null , this.coordsByRun[index] , 1 , this.coordsByRun[index][0] );
         },
         drawLine: function(ctx,coords,index,currentPoint) {
 

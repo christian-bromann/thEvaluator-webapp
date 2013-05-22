@@ -8,6 +8,7 @@
             <li><a href="#!/clickmap">Clickmap</a></li>
             <li><a href="#!/heatmap">Heatmap</a></li>
             <li><a href="#!/heatmap-timelapse">Heatmap (time-lapse)</a></li>
+            <li><a href="#!/gazespots">Gazespots</a></li>
         </ul>
     </div>
 

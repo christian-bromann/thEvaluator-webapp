@@ -7,7 +7,7 @@
 </div>
 
 <div class="widget heatmap">
-    <h3>Heatmap</h3>
+    <h3>Maps</h3>
     <div class="content"></div>
 </div>
 
