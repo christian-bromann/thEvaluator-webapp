@@ -26,11 +26,14 @@ define([
             this.$el.prepend(_.template( template, content));
         },
         buildTree: function(id) {
+            this.maxWidth = 750;
+            this.containerWidth = 940;
+            this.rectWidth = 150;
+
             var m = [30, 30, 30, 30],
-                w = 940 - m[1] - m[3],
+                w = this.containerWidth - m[1] - m[3],
                 h = 800 - m[0] - m[2];
 
-            this.maxWidth = 750;
             this.finishedInitialization = false;
             this.$el.find('svg').remove();
 
@@ -91,7 +94,7 @@ define([
                 .attr('x', function(d) { return d.children || d._children ? -16 : 16; })
                 .attr('y', function(d) { return d.children || d._children ? -35 : 35; })
                 .attr('height', 23)
-                .attr('width', 150)
+                .attr('width', this.rectWidth)
                 .attr('rx', 3)
                 .attr('ry', 3);
 
@@ -197,10 +200,12 @@ define([
                 svg.animate({
                     left: 0
                 },500);
+                svg.attr('width',this.containerWidth);
             } else if(!openAction && this.maxXPos > this.maxWidth && width > this.maxXPos) {
                 svg.animate({
                     left: -(this.maxXPos - this.maxWidth)
                 },500);
+                svg.attr('width',this.maxXPos+200);
             }
 
         },
@@ -234,10 +239,18 @@ define([
             this.buildTree(id);
         },
         showUrl:function(d) {
+            var svgWidth = $('.walkPaths').find('svg').width() - 40;
             d3.select(this).select('text').text(function() {return d.name;});
 
             var width = $(this).find('text').width() + 13;
-            $(this).find('rect').attr('width',width > 150 ? width : 150);
+            $(this).find('rect').attr('width',width > this.rectWidth ? width : this.rectWidth);
+
+            if(d.y + width > svgWidth) {
+                var diff = d.y + width - svgWidth;
+                $(this).find('rect').attr('x',function(id,x) { return parseInt(x,10) - diff; });
+                d3.select(this).select('text').attr('x', function(id,x) { return parseInt(x,10) - diff - 10; });
+            }
+
         },
         hideUrl:function(d) {
             var url = d.name.replace('http://','').replace('https://','');
@@ -247,8 +260,14 @@ define([
                 url = url.slice(0,18)+'...';
             }
 
-            d3.select(this).select('text').text(function() {return url;});
-            $(this).find('rect').attr('width',150);
+            d3.select(this).select('text')
+                .text(function() { return url; })
+                .attr('x', function(d) { return d.children || d._children ? -10 : 10; });
+
+            $(this).find('rect')
+                .attr('width',this.rectWidth)
+                .attr('x', function(d) { return d.children || d._children ? 16 : -16; });
+
         }
     });
 
