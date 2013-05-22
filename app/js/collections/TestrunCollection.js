@@ -205,7 +205,7 @@ define([
                 newChild, children;
 
             if(!visit) {
-                return;
+                return childs;
             } else if(childs && childs.length === 0) {
 
                 children = this.generateTree([],visits,++index,taskID);
