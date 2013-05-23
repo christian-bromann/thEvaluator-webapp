@@ -284,7 +284,7 @@ define([
             // render screenshot
             this.$el.find('.screenshot').remove();
             var screenshot = $('<img />').addClass('screenshot');
-            screenshot.attr('src','http://localhost:9001/api/testcase/' + this.testcase.id + '/screenshot.jpg?url=' + encodeURIComponent(this.param.url));
+            screenshot.attr('src',this.testcase.url() + '/screenshot.jpg?url=' + encodeURIComponent(this.param.url));
             this.$el.append(screenshot);
 
             return screenshot;
