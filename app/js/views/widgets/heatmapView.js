@@ -268,7 +268,7 @@ define([
         },
         finishedCalculatingTestrun: function() {
             this.calculatedRuns++;
-            this.$el.find('nav em').html((this.calculatedRuns / this.testrunCollection.models.length * 100)+'%');
+            this.$el.find('nav em').html(Math.round(this.calculatedRuns / this.testrunCollection.models.length * 10000) / 100 +'%');
 
             setTimeout(function() {
                 if(this.testrunCollection.models.length === this.calculatedRuns) {
