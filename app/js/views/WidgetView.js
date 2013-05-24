@@ -15,13 +15,16 @@ define([
             this.testcase          = testcase;
 
             if(!this.testrunCollection.models.length) {
-                this.$el.html('<i>no data available</i>');
-                this.$el.addClass('nocontent');
+                this._renderNoContent();
                 return;
             }
 
             this.delegateEvents();
             this.initialize();
+        },
+        _renderNoContent: function() {
+            this.$el.html('<i>no data available</i>');
+            this.$el.addClass('nocontent');
         }
     });
 

@@ -12,19 +12,26 @@ define([
     var GeoDataView = WidgetView.extend({
         el: '.geoData .content',
         initialize: function() {
+            this.data = this.testrunCollection.getGeoData();
+
+            if(this.data.length === 1) {
+                this._renderNoContent();
+                return;
+            }
+
             this.renderMap();
             this.renderBarChart();
         },
         renderMap: function() {
 
-            var data    = google.visualization.arrayToDataTable(this.testrunCollection.getGeoData()),
+            var data    = google.visualization.arrayToDataTable(this.data),
                 options = {};
 
             this.geoMap = new google.visualization.GeoChart($(this.el).find('.map').get(0));
             this.geoMap.draw(data, options);
         },
         renderBarChart: function() {
-            var data = google.visualization.arrayToDataTable(this.testrunCollection.getGeoData());
+            var data = google.visualization.arrayToDataTable(this.data);
 
             var options = {
                 title: 'Participants By Country',
