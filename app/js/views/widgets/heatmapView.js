@@ -210,6 +210,9 @@ define([
                 ctx.lineWidth = 2;
                 ctx.fillStyle = 'rgba(176,196,222,0.8)';
                 ctx.strokeStyle = 'rgba(70,130,180,0.8)';
+                ctx.font = 'bold 12px sans-serif';
+                ctx.textBaseline = 'middle';
+                ctx.textAlign = 'center';
 
                 this.$el.append(canvas);
                 this.$el.find('nav').append('<small>Calculating... <em>0%</em></small>');
@@ -235,11 +238,20 @@ define([
                             }
 
                             if(accumulation.length) {
+                                // draw circle
                                 ctx.beginPath();
                                 ctx.arc(accumulation[0].x, accumulation[0].y, accumulation.length, 0, 2 * Math.PI, false);
                                 ctx.lineWidth = 1;
                                 ctx.stroke();
                                 ctx.fill();
+
+                                // render text
+                                var normalFillStyle = ctx.fillStyle;
+                                ctx.fillStyle = 'black';
+                                ctx.fillText(accumulation.length, accumulation[0].x, accumulation[0].y);
+
+                                // reset styles
+                                ctx.fillStyle = normalFillStyle;
                                 ctx.lineWidth = 2;
                             }
 
