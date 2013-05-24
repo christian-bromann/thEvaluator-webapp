@@ -17,6 +17,7 @@ define([
             'click a[href="#!/heatmap"]': 'renderHeatmap',
             'click a[href="#!/heatmap-timelapse"]': 'renderTimelapse',
             'click a[href="#!/gazespots"]': 'renderGazespots',
+            'click a[href="#!/gazeplots"]': 'renderGazeplots',
             'click .pageList a': 'switchPage',
             'click .idList a': 'switchID'
         },
@@ -177,6 +178,76 @@ define([
                             this.ctx.$el.find('nav small').delay(1000).fadeOut();
                             this.ctx.config.radius = currentRadius;
                             this.ctx.heatmap.toggleDisplay();
+                        }
+                    }.bind({ctx:this,i:i}),0);
+                }
+
+            }.bind(this));
+        },
+        renderGazeplots: function() {
+            this.view = 'renderGazeplots';
+            this.clear();
+
+            if(!this.param.url) {
+                return;
+            }
+
+            this.$el.find('.choose').hide();
+            this.param.type = 'moves';
+            this.param.groupedByTestrun = true;
+
+            var screenshot   = this.createScreenshot(),
+                coordsByRun  = this.testrunCollection.getEventCoordinates(this.param),
+                accumulation = [],
+                canvas,ctx,x,y,prevX,prevY;
+
+            screenshot.load(function() {
+
+                canvas = document.createElement('canvas');
+                canvas.height = screenshot.get(0).height;
+                canvas.width  = screenshot.get(0).width;
+                ctx = canvas.getContext('2d');
+                ctx.lineWidth = 2;
+                ctx.fillStyle = 'rgba(176,196,222,0.8)';
+                ctx.strokeStyle = 'rgba(70,130,180,0.8)';
+
+                this.$el.append(canvas);
+                this.$el.find('nav').append('<small>Calculating... <em>0%</em></small>');
+
+                for(var i = 0; i < coordsByRun.length; ++i) {
+                    setTimeout(function() {
+                        this.ctx.$el.find('nav em').html(Math.round(this.i / (coordsByRun.length-1) * 10000)/100+'%');
+
+                        for(var j = 1; coordsByRun[this.i] && j < coordsByRun[this.i].length; ++j) {
+                            x = coordsByRun[this.i][j].x;
+                            y = coordsByRun[this.i][j].y;
+                            prevX = coordsByRun[this.i][j-1].x;
+                            prevY = coordsByRun[this.i][j-1].y;
+
+                            ctx.beginPath();
+                            ctx.moveTo(prevX,prevY);
+                            ctx.lineTo(x,y);
+                            ctx.stroke();
+
+                            if(Math.abs(x - prevX) < 10 && Math.abs(y - prevY) < 10) {
+                                accumulation.push({x:x,y:y});
+                                continue;
+                            }
+
+                            if(accumulation.length) {
+                                ctx.beginPath();
+                                ctx.arc(accumulation[0].x, accumulation[0].y, accumulation.length, 0, 2 * Math.PI, false);
+                                ctx.lineWidth = 1;
+                                ctx.stroke();
+                                ctx.fill();
+                                ctx.lineWidth = 2;
+                            }
+
+                            accumulation = [];
+                        }
+
+                        if(this.i === coordsByRun.length-1) {
+                            this.ctx.$el.find('nav small').delay(1000).fadeOut();
                         }
                     }.bind({ctx:this,i:i}),0);
                 }
