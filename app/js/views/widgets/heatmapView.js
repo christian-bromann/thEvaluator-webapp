@@ -248,7 +248,9 @@ define([
                                 // render text
                                 var normalFillStyle = ctx.fillStyle;
                                 ctx.fillStyle = 'black';
-                                ctx.fillText(accumulation.length, accumulation[0].x, accumulation[0].y);
+                                if(accumulation.length > 5) {
+                                    ctx.fillText(accumulation.length, accumulation[0].x, accumulation[0].y);
+                                }
 
                                 // reset styles
                                 ctx.fillStyle = normalFillStyle;
