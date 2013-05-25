@@ -243,7 +243,7 @@ define([
             d3.select(this).select('text').text(function() {return d.name;});
 
             var width = $(this).find('text').width() + 13;
-            $(this).find('rect').attr('width',width > this.rectWidth ? width : this.rectWidth);
+            $(this).find('rect').attr('width',width > 150 ? width : 150);
 
             if(d.y + width > svgWidth) {
                 var diff = d.y + width - svgWidth;
@@ -265,7 +265,7 @@ define([
                 .attr('x', function(d) { return d.children || d._children ? -10 : 10; });
 
             $(this).find('rect')
-                .attr('width',this.rectWidth)
+                .attr('width',150)
                 .attr('x', function(d) { return d.children || d._children ? 16 : -16; });
 
         }
