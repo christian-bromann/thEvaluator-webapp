@@ -13,11 +13,7 @@ define([
         el: '.heatmap .content',
         events: {
             'click a':'switchLabel',
-            'click a[href="#!/clickmap"]': 'renderClickmap',
-            'click a[href="#!/heatmap"]': 'renderHeatmap',
-            'click a[href="#!/heatmap-timelapse"]': 'renderTimelapse',
-            'click a[href="#!/gazespots"]': 'renderGazespots',
-            'click a[href="#!/gazeplots"]': 'renderGazeplots',
+            'click .mapList a': 'renderMapView',
             'click .pageList a': 'switchPage',
             'click .idList a': 'switchID'
         },
@@ -48,13 +44,7 @@ define([
             this.$el.prepend(_.template( template, content));
 
         },
-        renderClickmap: function() {
-            this.view = 'renderClickmap';
-            this.clear();
-
-            if(!this.param.url) {
-                return;
-            }
+        clickmap: function() {
 
             this.$el.find('.choose').hide();
             this.param.type = 'clicks';
@@ -66,87 +56,58 @@ define([
                 data: this.testrunCollection.getEventCoordinates(this.param)
             };
 
-            this.createScreenshot().load(function() {
+            this.heatmap = window.heatmapFactory.create(this.config);
+            this.heatmap.store.setDataSet(data);
 
-                this.heatmap = window.heatmapFactory.create(this.config);
-                this.heatmap.store.setDataSet(data);
-
-            }.bind(this));
         },
-        renderHeatmap: function() {
-            this.view = 'renderHeatmap';
-            this.clear();
-
-            if(!this.param.url) {
-                return;
-            }
+        heatmap: function() {
 
             this.$el.find('.choose').hide();
             this.param.type = 'moves';
             this.param.groupedByTestrun = true;
 
-            var screenshot = this.createScreenshot();
-            screenshot.load(function() {
+            this.coordsByRun = this.testrunCollection.getEventCoordinates(this.param);
+            this.heatmap = window.heatmapFactory.create(this.config);
+            this.heatmap.toggleDisplay();
+            this.calculatedRuns = 0;
 
-                this.coordsByRun = this.testrunCollection.getEventCoordinates(this.param);
-                this.heatmap = window.heatmapFactory.create(this.config);
-                this.heatmap.toggleDisplay();
-                this.calculatedRuns = 0;
+            this.$el.find('nav').append('<small>Calculating... <em>0%</em></small>');
+            setTimeout(function() {
+                this.calculateRun(0);
+            }.bind(this), 0);
 
-                this.$el.find('nav').append('<small>Calculating... <em>0%</em></small>');
-                setTimeout(function() {
-                    this.calculateRun(0);
-                }.bind(this), 0);
-
-            }.bind(this));
         },
-        renderTimelapse: function() {
-
-            this.view = 'renderTimelapse';
-            this.clear();
-
-            if(!this.param.url) {
-                return;
-            }
+        timelapse: function() {
 
             this.$el.find('.choose').hide();
             this.param.type = 'moves';
             this.param.groupedByTestrun = true;
 
-            var screenshot = this.createScreenshot();
-            screenshot.load(function() {
+            var coordsByRun = this.testrunCollection.getEventCoordinates(this.param),
+                canvas,ctx;
 
-                var coordsByRun = this.testrunCollection.getEventCoordinates(this.param),
-                    canvas,ctx;
+            this.heatmap = window.heatmapFactory.create(this.config);
 
-                this.heatmap = window.heatmapFactory.create(this.config);
+            console.log('whaaat');
 
-                for(var i = 0; i < coordsByRun.length; ++i) {
+            for(var i = 0; i < coordsByRun.length; ++i) {
 
-                    // skip if no coords available
-                    if(!coordsByRun[i] || !coordsByRun[i].length) {
-                        continue;
-                    }
-
-                    canvas = document.createElement('canvas');
-                    canvas.height = screenshot.get(0).height;
-                    canvas.width  = screenshot.get(0).width;
-                    ctx = canvas.getContext('2d');
-                    ctx.fillStyle = 'rgb(200,0,0)';
-
-                    this.$el.append(canvas);
-                    this.drawLine( ctx , coordsByRun[i] , 1 , coordsByRun[i][0] );
+                // skip if no coords available
+                if(!coordsByRun[i] || !coordsByRun[i].length) {
+                    continue;
                 }
 
-            }.bind(this));
-        },
-        renderGazespots: function() {
-            this.view = 'renderGazespots';
-            this.clear();
+                canvas = document.createElement('canvas');
+                canvas.height = this.screenshot.get(0).height;
+                canvas.width  = this.screenshot.get(0).width;
+                ctx = canvas.getContext('2d');
+                ctx.fillStyle = 'rgb(200,0,0)';
 
-            if(!this.param.url) {
-                return;
+                this.$el.append(canvas);
+                this.drawLine( ctx , coordsByRun[i] , 1 , coordsByRun[i][0] );
             }
+        },
+        gazespots: function() {
 
             this.$el.find('.choose').hide();
             this.param.type = 'moves';
@@ -155,121 +116,105 @@ define([
             var currentRadius = this.config.radius;
             this.config.radius = 20;
 
-            var screenshot = this.createScreenshot();
-            screenshot.load(function() {
+            var coordsByRun = this.testrunCollection.getEventCoordinates(this.param);
+            this.heatmap = window.heatmapFactory.create(this.config);
+            this.heatmap.toggleDisplay();
 
-                var coordsByRun = this.testrunCollection.getEventCoordinates(this.param);
-                this.heatmap = window.heatmapFactory.create(this.config);
-                this.heatmap.toggleDisplay();
+            this.$el.find('nav').append('<small>Calculating... <em>0%</em></small>');
 
-                this.$el.find('nav').append('<small>Calculating... <em>0%</em></small>');
+            for(var i = 0; i < coordsByRun.length; ++i) {
+                setTimeout(function() {
+                    this.ctx.$el.find('nav em').html(Math.round(this.i / (coordsByRun.length-1) * 10000)/100+'%');
 
-                for(var i = 0; i < coordsByRun.length; ++i) {
-                    setTimeout(function() {
-                        this.ctx.$el.find('nav em').html(Math.round(this.i / (coordsByRun.length-1) * 10000)/100+'%');
-
-                        for(var j = 1; coordsByRun[this.i] && j < coordsByRun[this.i].length; ++j) {
-                            if(Math.abs(coordsByRun[this.i][j-1].x - coordsByRun[this.i][j].x) < 3 || Math.abs(coordsByRun[this.i][j-1].y - coordsByRun[this.i][j].y) < 3) {
-                                this.ctx.heatmap.store.addDataPoint(coordsByRun[this.i][j-1].x, coordsByRun[this.i][j-1].y);
-                            }
+                    for(var j = 1; coordsByRun[this.i] && j < coordsByRun[this.i].length; ++j) {
+                        if(Math.abs(coordsByRun[this.i][j-1].x - coordsByRun[this.i][j].x) < 3 || Math.abs(coordsByRun[this.i][j-1].y - coordsByRun[this.i][j].y) < 3) {
+                            this.ctx.heatmap.store.addDataPoint(coordsByRun[this.i][j-1].x, coordsByRun[this.i][j-1].y);
                         }
+                    }
 
-                        if(this.i === coordsByRun.length-1) {
-                            this.ctx.$el.find('nav small').delay(1000).fadeOut();
-                            this.ctx.config.radius = currentRadius;
-                            this.ctx.heatmap.toggleDisplay();
-                        }
-                    }.bind({ctx:this,i:i}),0);
-                }
-
-            }.bind(this));
-        },
-        renderGazeplots: function() {
-            this.view = 'renderGazeplots';
-            this.clear();
-
-            if(!this.param.url) {
-                return;
+                    if(this.i === coordsByRun.length-1) {
+                        this.ctx.$el.find('nav small').delay(1000).fadeOut();
+                        this.ctx.config.radius = currentRadius;
+                        this.ctx.heatmap.toggleDisplay();
+                    }
+                }.bind({ctx:this,i:i}),0);
             }
+        },
+        gazeplots: function() {
 
             this.$el.find('.choose').hide();
             this.param.type = 'moves';
             this.param.groupedByTestrun = true;
 
-            var screenshot   = this.createScreenshot(),
-                coordsByRun  = this.testrunCollection.getEventCoordinates(this.param),
+            var coordsByRun  = this.testrunCollection.getEventCoordinates(this.param),
                 accumulation = [],
                 canvas,ctx,curr,prev;
 
-            screenshot.load(function() {
+            canvas = document.createElement('canvas');
+            canvas.height = this.screenshot.get(0).height;
+            canvas.width  = this.screenshot.get(0).width;
+            ctx = canvas.getContext('2d');
+            ctx.lineWidth = 2;
+            ctx.fillStyle = 'rgba(176,196,222,0.8)';
+            ctx.strokeStyle = 'rgba(70,130,180,0.8)';
+            ctx.font = 'bold 12px sans-serif';
+            ctx.textBaseline = 'middle';
+            ctx.textAlign = 'center';
 
-                canvas = document.createElement('canvas');
-                canvas.height = screenshot.get(0).height;
-                canvas.width  = screenshot.get(0).width;
-                ctx = canvas.getContext('2d');
-                ctx.lineWidth = 2;
-                ctx.fillStyle = 'rgba(176,196,222,0.8)';
-                ctx.strokeStyle = 'rgba(70,130,180,0.8)';
-                ctx.font = 'bold 12px sans-serif';
-                ctx.textBaseline = 'middle';
-                ctx.textAlign = 'center';
+            this.$el.append(canvas);
+            this.$el.find('nav').append('<small>Calculating... <em>0%</em></small>');
 
-                this.$el.append(canvas);
-                this.$el.find('nav').append('<small>Calculating... <em>0%</em></small>');
+            for(var i = 0; i < coordsByRun.length; ++i) {
+                setTimeout(function() {
+                    this.ctx.$el.find('nav em').html(Math.round(this.i / (coordsByRun.length-1) * 10000)/100+'%');
 
-                for(var i = 0; i < coordsByRun.length; ++i) {
-                    setTimeout(function() {
-                        this.ctx.$el.find('nav em').html(Math.round(this.i / (coordsByRun.length-1) * 10000)/100+'%');
+                    for(var j = 1; coordsByRun[this.i] && j < coordsByRun[this.i].length; ++j) {
+                        curr = coordsByRun[this.i][j];
+                        prev = coordsByRun[this.i][j-1];
 
-                        for(var j = 1; coordsByRun[this.i] && j < coordsByRun[this.i].length; ++j) {
-                            curr = coordsByRun[this.i][j];
-                            prev = coordsByRun[this.i][j-1];
+                        ctx.beginPath();
+                        // skip stroke if time diff is to big, events origin is from new pagevisit then
+                        if(Math.abs(curr.timestamp - prev.timestamp) > 1000) {
+                            ctx.moveTo(curr.x,curr.y);
+                        } else {
+                            ctx.moveTo(prev.x,prev.y);
+                            ctx.lineTo(curr.x,curr.y);
+                        }
+                        ctx.stroke();
 
+                        if(Math.abs(curr.x - prev.x) < 10 && Math.abs(curr.y - prev.y) < 10) {
+                            accumulation.push({x:curr.x,y:curr.y});
+                            continue;
+                        }
+
+                        if(accumulation.length) {
+                            // draw circle
                             ctx.beginPath();
-                            // skip stroke if time diff is to big, events origin is from new pagevisit then
-                            if(Math.abs(curr.timestamp - prev.timestamp) > 1000) {
-                                ctx.moveTo(curr.x,curr.y);
-                            } else {
-                                ctx.moveTo(prev.x,prev.y);
-                                ctx.lineTo(curr.x,curr.y);
-                            }
+                            ctx.arc(accumulation[0].x, accumulation[0].y, accumulation.length, 0, 2 * Math.PI, false);
+                            ctx.lineWidth = 1;
                             ctx.stroke();
+                            ctx.fill();
 
-                            if(Math.abs(curr.x - prev.x) < 10 && Math.abs(curr.y - prev.y) < 10) {
-                                accumulation.push({x:curr.x,y:curr.y});
-                                continue;
+                            // render text
+                            var normalFillStyle = ctx.fillStyle;
+                            ctx.fillStyle = 'black';
+                            if(accumulation.length > 5) {
+                                ctx.fillText(accumulation.length, accumulation[0].x, accumulation[0].y);
                             }
 
-                            if(accumulation.length) {
-                                // draw circle
-                                ctx.beginPath();
-                                ctx.arc(accumulation[0].x, accumulation[0].y, accumulation.length, 0, 2 * Math.PI, false);
-                                ctx.lineWidth = 1;
-                                ctx.stroke();
-                                ctx.fill();
-
-                                // render text
-                                var normalFillStyle = ctx.fillStyle;
-                                ctx.fillStyle = 'black';
-                                if(accumulation.length > 5) {
-                                    ctx.fillText(accumulation.length, accumulation[0].x, accumulation[0].y);
-                                }
-
-                                // reset styles
-                                ctx.fillStyle = normalFillStyle;
-                                ctx.lineWidth = 2;
-                            }
-
-                            accumulation = [];
+                            // reset styles
+                            ctx.fillStyle = normalFillStyle;
+                            ctx.lineWidth = 2;
                         }
 
-                        if(this.i === coordsByRun.length-1) {
-                            this.ctx.$el.find('nav small').delay(1000).fadeOut();
-                        }
-                    }.bind({ctx:this,i:i}),0);
-                }
+                        accumulation = [];
+                    }
 
-            }.bind(this));
+                    if(this.i === coordsByRun.length-1) {
+                        this.ctx.$el.find('nav small').delay(1000).fadeOut();
+                    }
+                }.bind({ctx:this,i:i}),0);
+            }
         },
         calculateRun: function(index) {
 
@@ -369,18 +314,21 @@ define([
             }.bind(this),0);
         },
         createScreenshot: function() {
+
+            this.$el.find('.screenshot').unbind().remove();
+
             // render screenshot
             this.$el.find('.screenshot').remove();
-            var screenshot = $('<img />').addClass('screenshot');
-            screenshot.attr('src',this.testcase.url() + '/screenshot.jpg?url=' + encodeURIComponent(this.param.url));
-            this.$el.append(screenshot);
+            this.screenshot = $('<img />').addClass('screenshot');
+            this.screenshot.data('url',encodeURIComponent(this.param.url));
+            this.screenshot.attr('src',this.testcase.url() + '/screenshot.jpg?url=' + encodeURIComponent(this.param.url));
+            this.$el.append(this.screenshot);
 
-            return screenshot;
+            return this.screenshot;
         },
         clear: function() {
             delete this.heatmap;
             this.$el.find('canvas').unbind().remove();
-            this.$el.find('.screenshot').unbind().remove();
         },
         switchLabel: function(e) {
             var elem = $(e.target);
@@ -389,6 +337,7 @@ define([
                 elem = elem.parent();
             }
 
+            // clear button action
             if(elem.data('param')) {
                 delete this.param[elem.data('param')];
                 elem.css('display','none');
@@ -399,11 +348,13 @@ define([
                     testrunList.find('.drpdownLabel').html('By Testrun');
                     testrunList.hide();
                     this.$el.find('.choose').show();
+
+                    this.clear();
+                    delete this.screenshot;
+                    this.$el.find('.screenshot').unbind().remove();
                 }
 
-                if(this[this.view]) {
-                    this[this.view]();
-                }
+                this.renderMapView();
             }
 
             var label = elem.data('placeholder') ? elem.data('placeholder') : elem.html();
@@ -420,10 +371,7 @@ define([
             this.param.url = decodeURIComponent(elem.attr('href').substr(3));
             elem.parents('.btn-group').find('.clear').css('display','inline-block');
 
-            if(this[this.view]) {
-                this[this.view]();
-            }
-
+            this.renderMapView();
             this.param.testrun = null;
             this.updateTestrunList();
             $('.testrunList').css('display','inline-block');
@@ -434,7 +382,23 @@ define([
             this.param.testrun = elem.attr('href').substr(3);
             elem.parents('.btn-group').find('.clear').css('display','inline-block');
 
-            if(this[this.view]) {
+            this.renderMapView();
+        },
+        renderMapView: function(e) {
+
+            if(e) {
+                this.view = $(e.target).attr('href').substr(3);
+            }
+
+            if(!this.view || !this.param.url) {
+                return;
+            }
+
+            this.clear();
+
+            if(!this.screenshot || this.screenshot.data('url') !== encodeURIComponent(this.param.url)) {
+                this.createScreenshot().load(this[this.view].bind(this));
+            } else {
                 this[this.view]();
             }
         },
