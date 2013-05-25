@@ -199,7 +199,7 @@ define([
             var screenshot   = this.createScreenshot(),
                 coordsByRun  = this.testrunCollection.getEventCoordinates(this.param),
                 accumulation = [],
-                canvas,ctx,x,y,prevX,prevY;
+                canvas,ctx,curr,prev;
 
             screenshot.load(function() {
 
@@ -222,18 +222,21 @@ define([
                         this.ctx.$el.find('nav em').html(Math.round(this.i / (coordsByRun.length-1) * 10000)/100+'%');
 
                         for(var j = 1; coordsByRun[this.i] && j < coordsByRun[this.i].length; ++j) {
-                            x = coordsByRun[this.i][j].x;
-                            y = coordsByRun[this.i][j].y;
-                            prevX = coordsByRun[this.i][j-1].x;
-                            prevY = coordsByRun[this.i][j-1].y;
+                            curr = coordsByRun[this.i][j];
+                            prev = coordsByRun[this.i][j-1];
 
                             ctx.beginPath();
-                            ctx.moveTo(prevX,prevY);
-                            ctx.lineTo(x,y);
+                            // skip stroke if time diff is to big, events origin is from new pagevisit then
+                            if(Math.abs(curr.timestamp - prev.timestamp) > 1000) {
+                                ctx.moveTo(curr.x,curr.y);
+                            } else {
+                                ctx.moveTo(prev.x,prev.y);
+                                ctx.lineTo(curr.x,curr.y);
+                            }
                             ctx.stroke();
 
-                            if(Math.abs(x - prevX) < 10 && Math.abs(y - prevY) < 10) {
-                                accumulation.push({x:x,y:y});
+                            if(Math.abs(curr.x - prev.x) < 10 && Math.abs(curr.y - prev.y) < 10) {
+                                accumulation.push({x:curr.x,y:curr.y});
                                 continue;
                             }
 
