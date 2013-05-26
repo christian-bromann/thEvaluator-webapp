@@ -58,6 +58,11 @@ define([
                 data: this.testrunCollection.getEventCoordinates(this.param)
             };
 
+            if(data.data.length === 0) {
+                this.$el.append('<small class="status"><span>No Testruns Found!</span></small>');
+                return;
+            }
+
             this.heatmap = window.heatmapFactory.create(this.config);
             this.heatmap.store.setDataSet(data);
 
@@ -69,11 +74,15 @@ define([
             this.param.groupedByTestrun = true;
 
             this.coordsByRun = this.testrunCollection.getEventCoordinates(this.param);
+
+            if(this.coordsByRun.length === 0) {
+                this.$el.append('<small class="status"><span>No Testruns Found!</span></small>');
+                return;
+            }
+
             this.heatmap = window.heatmapFactory.create(this.config);
             this.heatmap.toggleDisplay();
             this.calculatedRuns = 0;
-
-            this.$el.find('small').remove();
             this.$el.append('<small class="status"><span>Calculating... <em>0%</em></span></small>');
             setTimeout(function() {
                 this.calculateRun(0);
@@ -88,6 +97,11 @@ define([
 
             var coordsByRun = this.testrunCollection.getEventCoordinates(this.param),
                 canvas,ctx;
+
+            if(coordsByRun.length === 0) {
+                this.$el.append('<small class="status"><span>No Testruns Found!</span></small>');
+                return;
+            }
 
             this.heatmap = window.heatmapFactory.create(this.config);
 
@@ -122,7 +136,6 @@ define([
             this.heatmap = window.heatmapFactory.create(config);
             this.heatmap.toggleDisplay();
 
-            this.$el.find('>small').remove();
             this.$el.append(coordsByRun.length ? '<small class="status"><span>Calculating... <em>0%</em></span></small>' : '<small class="status"><span>No Testruns Found!</span></small>');
             for(var i = 0; i < coordsByRun.length; ++i) {
                 setTimeout(function() {
@@ -164,7 +177,6 @@ define([
             ctx.textAlign = 'center';
 
             this.$el.append(canvas);
-            this.$el.find('>small').remove();
             this.$el.append(coordsByRun.length ? '<small class="status"><span>Calculating... <em>0%</em></span></small>' : '<small class="status"><span>No Testruns Found!</span></small>');
 
             for(var i = 0; i < coordsByRun.length; ++i) {
@@ -339,6 +351,7 @@ define([
         },
         clear: function() {
             delete this.heatmap;
+            this.$el.find('>small').remove();
             this.$el.find('canvas').unbind().remove();
         },
         switchLabel: function(e) {
