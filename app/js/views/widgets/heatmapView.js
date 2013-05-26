@@ -107,19 +107,19 @@ define([
         },
         gazespots: function() {
 
+            this.param.type = 'moves';
+            this.param.groupedByTestrun = true;
+
             var coordsByRun   = this.testrunCollection.getEventCoordinates(this.param),
                 currentRadius = this.config.radius,
                 dataSet       = {max: 10, data:[]};
 
             this.$el.find('.choose').hide();
-            this.param.type = 'moves';
-            this.param.groupedByTestrun = true;
             this.config.radius = 20;
             this.heatmap = window.heatmapFactory.create(this.config);
             this.heatmap.toggleDisplay();
 
             this.$el.find('nav').append('<small>Calculating... <em>0%</em></small>');
-
             for(var i = 0; i < coordsByRun.length; ++i) {
                 setTimeout(function() {
                     this.ctx.$el.find('nav em').html(Math.round(this.i / (coordsByRun.length-1) * 10000)/100+'%');
@@ -165,6 +165,7 @@ define([
 
             for(var i = 0; i < coordsByRun.length; ++i) {
                 setTimeout(function() {
+                    accumulation = [];
                     this.ctx.$el.find('nav em').html(Math.round(this.i / (coordsByRun.length-1) * 10000)/100+'%');
 
                     for(var j = 1; coordsByRun[this.i] && j < coordsByRun[this.i].length; ++j) {
@@ -186,34 +187,40 @@ define([
                             continue;
                         }
 
-                        if(accumulation.length) {
-                            // draw circle
-                            ctx.beginPath();
-                            ctx.arc(accumulation[0].x, accumulation[0].y, accumulation.length, 0, 2 * Math.PI, false);
-                            ctx.lineWidth = 1;
-                            ctx.stroke();
-                            ctx.fill();
-
-                            // render text
-                            var normalFillStyle = ctx.fillStyle;
-                            ctx.fillStyle = 'black';
-                            if(accumulation.length > 5) {
-                                ctx.fillText(accumulation.length, accumulation[0].x, accumulation[0].y);
-                            }
-
-                            // reset styles
-                            ctx.fillStyle = normalFillStyle;
-                            ctx.lineWidth = 2;
-                        }
-
+                        // draw circle
+                        this.ctx.drawCircle(ctx,accumulation);
                         accumulation = [];
                     }
 
                     if(this.i === coordsByRun.length-1) {
                         this.ctx.$el.find('nav small').delay(1000).fadeOut();
+                        this.ctx.drawCircle(ctx,accumulation);
                     }
                 }.bind({ctx:this,i:i}),0);
             }
+        },
+        drawCircle: function(ctx,accumulation) {
+
+            if(!accumulation.length) {
+                return;
+            }
+
+            ctx.beginPath();
+            ctx.arc(accumulation[0].x, accumulation[0].y, accumulation.length, 0, 2 * Math.PI, false);
+            ctx.lineWidth = 1;
+            ctx.stroke();
+            ctx.fill();
+
+            // render text
+            var normalFillStyle = ctx.fillStyle;
+            ctx.fillStyle = 'black';
+            if(accumulation.length > 5) {
+                ctx.fillText(accumulation.length, accumulation[0].x, accumulation[0].y);
+            }
+
+            // reset styles
+            ctx.fillStyle = normalFillStyle;
+            ctx.lineWidth = 2;
         },
         calculateRun: function(index) {
 
