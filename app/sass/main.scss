@@ -217,6 +217,24 @@ body {
         .dropdown-menu {
             z-index: 9999999999;
         }
+
+        .status {
+            width: 100%;
+            text-align: center;
+            position: absolute;
+            top: 41px;
+            display: block;
+            margin: 20px 0 0;
+
+            span {
+                background: rgba(0,0,0,0.8);
+                text-align: center;
+                padding: 5px 10px;
+                border-radius: 3px;
+                color: #ddd;
+                font-weight: bold;
+            }
+        }
     }
 }
 

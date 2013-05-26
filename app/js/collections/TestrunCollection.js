@@ -43,7 +43,16 @@ define([
             // iterate through all testruns
             for(i = 0; i < this.models.length; ++i) {
 
-                if(!this.models[i][type] || (opts.testrun && opts.testrun !== this.models[i]._id)) {
+                if
+                    (!this.models[i][type] ||
+                    // testrun filter
+                    (opts.testrun && opts.testrun !== this.models[i]._id) ||
+                    // only successful filter
+                    (opts.filter && opts.filter === 'only-successful' && this.models[i].status !== 1) ||
+                    // only timedout filter
+                    (opts.filter && opts.filter === 'only-timedout' && this.models[i].status !== 2) ||
+                    // only failed filter
+                    (opts.filter && opts.filter === 'only-failed' && this.models[i].status !== 3)) {
                     continue;
                 }
 

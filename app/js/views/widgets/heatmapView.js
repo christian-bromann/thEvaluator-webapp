@@ -15,7 +15,8 @@ define([
             'click a':'switchLabel',
             'click .mapList a': 'renderMapView',
             'click .pageList a': 'switchPage',
-            'click .idList a': 'switchID'
+            'click .idList a': 'switchID',
+            'click .filterList a': 'switchFilter'
         },
         initialize: function() {
 
@@ -71,7 +72,8 @@ define([
             this.heatmap.toggleDisplay();
             this.calculatedRuns = 0;
 
-            this.$el.find('nav').append('<small>Calculating... <em>0%</em></small>');
+            this.$el.find('small').remove();
+            this.$el.append('<small class="status"><span>Calculating... <em>0%</em></span></small>');
             setTimeout(function() {
                 this.calculateRun(0);
             }.bind(this), 0);
@@ -119,10 +121,11 @@ define([
             this.heatmap = window.heatmapFactory.create(this.config);
             this.heatmap.toggleDisplay();
 
-            this.$el.find('nav').append('<small>Calculating... <em>0%</em></small>');
+            this.$el.find('>small').remove();
+            this.$el.append(coordsByRun.length ? '<small class="status"><span>Calculating... <em>0%</em></span></small>' : '<small class="status"><span>No Testruns Found!</span></small>');
             for(var i = 0; i < coordsByRun.length; ++i) {
                 setTimeout(function() {
-                    this.ctx.$el.find('nav em').html(Math.round(this.i / (coordsByRun.length-1) * 10000)/100+'%');
+                    this.ctx.$el.find('.status em').html(Math.round((this.i+1) / coordsByRun.length * 10000)/100+'%');
 
                     for(var j = 1; coordsByRun[this.i] && j < coordsByRun[this.i].length; ++j) {
                         if(Math.abs(coordsByRun[this.i][j-1].x - coordsByRun[this.i][j].x) < 3 || Math.abs(coordsByRun[this.i][j-1].y - coordsByRun[this.i][j].y) < 3) {
@@ -131,7 +134,7 @@ define([
                     }
 
                     if(this.i === coordsByRun.length-1) {
-                        this.ctx.$el.find('nav small').delay(1000).fadeOut();
+                        this.ctx.$el.find('small').delay(1000).fadeOut();
                         this.ctx.config.radius = currentRadius;
                         this.ctx.heatmap.store.setDataSet(dataSet);
                         this.ctx.heatmap.toggleDisplay();
@@ -161,12 +164,13 @@ define([
             ctx.textAlign = 'center';
 
             this.$el.append(canvas);
-            this.$el.find('nav').append('<small>Calculating... <em>0%</em></small>');
+            this.$el.find('>small').remove();
+            this.$el.append(coordsByRun.length ? '<small class="status"><span>Calculating... <em>0%</em></span></small>' : '<small class="status"><span>No Testruns Found!</span></small>');
 
             for(var i = 0; i < coordsByRun.length; ++i) {
                 setTimeout(function() {
                     accumulation = [];
-                    this.ctx.$el.find('nav em').html(Math.round(this.i / (coordsByRun.length-1) * 10000)/100+'%');
+                    this.ctx.$el.find('.status em').html(Math.round((this.i+1) / coordsByRun.length * 10000)/100+'%');
 
                     for(var j = 1; coordsByRun[this.i] && j < coordsByRun[this.i].length; ++j) {
                         curr = coordsByRun[this.i][j];
@@ -193,7 +197,7 @@ define([
                     }
 
                     if(this.i === coordsByRun.length-1) {
-                        this.ctx.$el.find('nav small').delay(1000).fadeOut();
+                        this.ctx.$el.find('small').delay(1000).fadeOut();
                         this.ctx.drawCircle(ctx,accumulation);
                     }
                 }.bind({ctx:this,i:i}),0);
@@ -307,13 +311,13 @@ define([
         },
         finishedCalculatingTestrun: function() {
             this.calculatedRuns++;
-            this.$el.find('nav em').html(Math.round(this.calculatedRuns / this.testrunCollection.models.length * 10000) / 100 +'%');
+            this.$el.find('.status em').html(Math.round(this.calculatedRuns / this.testrunCollection.models.length * 10000) / 100 +'%');
 
             setTimeout(function() {
                 if(this.testrunCollection.models.length === this.calculatedRuns) {
                     delete this.coordsByRun;
                     this.heatmap.toggleDisplay();
-                    this.$el.find('nav small').delay(1000).fadeOut(function() { $(this).remove(); });
+                    this.$el.find('small').delay(1000).fadeOut(function() { $(this).remove(); });
                 } else {
                     this.calculateRun(this.calculatedRuns);
                 }
@@ -386,6 +390,14 @@ define([
             var elem = $(e.target);
 
             this.param.testrun = elem.attr('href').substr(3);
+            elem.parents('.btn-group').find('.clear').css('display','inline-block');
+
+            this.renderMapView();
+        },
+        switchFilter: function(e) {
+            var elem = $(e.target);
+
+            this.param.filter = elem.attr('href').substr(3);
             elem.parents('.btn-group').find('.clear').css('display','inline-block');
 
             this.renderMapView();
