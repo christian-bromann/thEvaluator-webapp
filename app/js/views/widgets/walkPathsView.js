@@ -12,9 +12,13 @@ define([
     var WalkPathsView = WidgetView.extend({
         el: '.walkPaths .content',
         events: {
-            'click a':'switchLabel',
+            'click a': 'switchLabel',
+            'click .taskList a': 'switchTask',
+            'click .filterList a': 'switchFilter'
         },
         initialize: function() {
+            this.param = {};
+
             this.render();
         },
         render: function() {
@@ -25,7 +29,7 @@ define([
 
             this.$el.prepend(_.template( template, content));
         },
-        buildTree: function(id) {
+        buildTree: function() {
             this.maxWidth = 750;
             this.containerWidth = 940;
             this.rectWidth = 150;
@@ -37,10 +41,11 @@ define([
             this.finishedInitialization = false;
             this.$el.find('svg').remove();
 
-            this.json = this.testrunCollection.generateWalkPath(id);
+            this.json = this.testrunCollection.generateWalkPath(this.param);
 
             if(!this.json) {
                 this.$el.append('<i class="nocontent">no data available</i>');
+                this.$el.css('overflow','visible');
                 return;
             }
 
@@ -230,13 +235,38 @@ define([
             return url;
         },
         switchLabel: function(e) {
-            var label = $(e.target).data('placeholder') ? $(e.target).data('placeholder') : $(e.target).html(),
-                id    = $(e.target).attr('href').slice(3);
+            var elem = $(e.target);
 
-            $(e.target).parents('.btn-group').find('>.btn:first-Child').html(label);
-            this.$el.find('i').remove();
+            if(e.target.nodeName.toLowerCase() === 'i') {
+                elem = elem.parent();
+            }
+
+            // clear button action
+            if(elem.data('param')) {
+                delete this.param[elem.data('param')];
+                elem.css('display','none');
+                this.buildTree();
+            }
+
+            var label = elem.data('placeholder') ? elem.data('placeholder') : elem.html();
+            elem.parents('.btn-group').find('>.btn:first-Child').html(label);
+
+            this.$el.find('.nocontent').remove();
+            this.$el.find('.testrunList').css('display','inline-block');
             this.$el.css('overflow','hidden');
-            this.buildTree(id);
+        },
+        switchTask: function(e) {
+            var elem = $(e.target);
+            this.param.task = elem.attr('href').substr(3);
+            this.buildTree();
+        },
+        switchFilter: function(e) {
+            var elem = $(e.target);
+
+            this.param.filter = elem.attr('href').substr(3);
+            elem.parents('.btn-group').find('.clear').css('display','inline-block');
+
+            this.buildTree();
         },
         showUrl:function(d) {
             var svgWidth = $('.walkPaths').find('svg').width() - 40;

@@ -343,7 +343,7 @@ define([
         switchLabel: function(e) {
             var elem = $(e.target);
 
-            if(e.target.nodeName === 'I') {
+            if(e.target.nodeName.toLowerCase() === 'i') {
                 elem = elem.parent();
             }
 
@@ -353,7 +353,7 @@ define([
                 elem.css('display','none');
 
                 if(elem.data('param') === 'url') {
-                    var testrunList = $('.testrunList');
+                    var testrunList = this.$el.find('.testrunList');
                     testrunList.find('.clear').css('display','none');
                     testrunList.find('.drpdownLabel').html('By Testrun');
                     testrunList.hide();
@@ -384,7 +384,7 @@ define([
             this.renderMapView();
             this.param.testrun = null;
             this.updateTestrunList();
-            $('.testrunList').css('display','inline-block');
+            this.$el.find('.testrunList').css('display','inline-block');
         },
         switchID: function(e) {
             var elem = $(e.target);

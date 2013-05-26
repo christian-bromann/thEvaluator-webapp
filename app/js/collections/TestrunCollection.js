@@ -192,21 +192,27 @@ define([
 
             return ret;
         },
-        generateWalkPath: function(taskID) {
+        generateWalkPath: function(opts) {
             var ret = [],
                 visitsByTaskID;
 
             for(var i = 0; i < this.models.length; ++i) {
 
                 visitsByTaskID = _.filter(this.models[i].visits.slice(0), function(visit) {
-                    return visit.task === taskID;
+                    return visit.task === opts.task;
                 });
 
-                if(visitsByTaskID && visitsByTaskID.length === 0) {
+                if(
+                    // filter empty testruns
+                    (visitsByTaskID && visitsByTaskID.length === 0) ||
+                    // param filter
+                    (opts.filter && this.match(opts.filter,this.models[i]))) {
                     continue;
                 }
 
-                ret = this.generateTree(ret,visitsByTaskID,0,taskID);
+                console.log('do it');
+
+                ret = this.generateTree(ret,visitsByTaskID,0,opts.task);
             }
             return ret[0];
         },
