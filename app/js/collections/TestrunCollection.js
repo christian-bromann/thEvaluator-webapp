@@ -210,8 +210,6 @@ define([
                     continue;
                 }
 
-                console.log('do it');
-
                 ret = this.generateTree(ret,visitsByTaskID,0,opts.task);
             }
             return ret[0];

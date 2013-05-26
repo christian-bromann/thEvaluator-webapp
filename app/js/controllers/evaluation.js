@@ -7,10 +7,10 @@ define([
     'models/TestcaseModel',
 
     // widgets
-    'views/widgets/heatmapView',
-    'views/widgets/geoDataView',
-    'views/widgets/resultsView',
-    'views/widgets/walkPathsView'
+    'views/widgets/HeatmapView',
+    'views/widgets/GeoDataView',
+    'views/widgets/ResultsView',
+    'views/widgets/WalkPathsView'
 ], function( $, _, Backbone, TestrunCollection, Testcase, HeatmapWidget, GeoDataWidget, ResultsWidget, WalkPathsWidget) {
 
     'use strict';

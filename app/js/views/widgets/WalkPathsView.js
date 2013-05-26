@@ -4,17 +4,17 @@ define([
     'jquery',
     'underscore',
     'views/WidgetView',
+    'views/widgets/FilterView',
     'text!templates/widgets/WalkPathsWidget.tpl',
     'd3'
-], function ($, _, WidgetView, template) {
+], function ($, _, WidgetView, FilterView, template) {
     'use strict';
 
     var WalkPathsView = WidgetView.extend({
         el: '.walkPaths .content',
         events: {
             'click a': 'switchLabel',
-            'click .taskList a': 'switchTask',
-            'click .filterList a': 'switchFilter'
+            'click .taskList a': 'switchTask'
         },
         initialize: function() {
             this.param = {};
@@ -28,6 +28,8 @@ define([
             };
 
             this.$el.prepend(_.template( template, content));
+
+            this.filterView = new FilterView(this.$el.find('nav'),this,this.buildTree);
         },
         buildTree: function() {
             this.maxWidth = 750;
@@ -258,14 +260,6 @@ define([
         switchTask: function(e) {
             var elem = $(e.target);
             this.param.task = elem.attr('href').substr(3);
-            this.buildTree();
-        },
-        switchFilter: function(e) {
-            var elem = $(e.target);
-
-            this.param.filter = elem.attr('href').substr(3);
-            elem.parents('.btn-group').find('.clear').css('display','inline-block');
-
             this.buildTree();
         },
         showUrl:function(d) {
