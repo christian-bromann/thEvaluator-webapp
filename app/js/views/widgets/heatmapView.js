@@ -113,12 +113,12 @@ define([
             this.param.groupedByTestrun = true;
 
             var coordsByRun   = this.testrunCollection.getEventCoordinates(this.param),
-                currentRadius = this.config.radius,
-                dataSet       = {max: 10, data:[]};
+                dataSet       = {max: 10, data:[]},
+                config        = _.clone(this.config);
 
+            config.radius = 20;
             this.$el.find('.choose').hide();
-            this.config.radius = 20;
-            this.heatmap = window.heatmapFactory.create(this.config);
+            this.heatmap = window.heatmapFactory.create(config);
             this.heatmap.toggleDisplay();
 
             this.$el.find('>small').remove();
@@ -135,7 +135,6 @@ define([
 
                     if(this.i === coordsByRun.length-1) {
                         this.ctx.$el.find('small').delay(1000).fadeOut();
-                        this.ctx.config.radius = currentRadius;
                         this.ctx.heatmap.store.setDataSet(dataSet);
                         this.ctx.heatmap.toggleDisplay();
                     }
