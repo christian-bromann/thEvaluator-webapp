@@ -33,9 +33,7 @@ define([
                 type = opts.type || 'clicks',
                 ratio = opts.ratio || 1,
                 groupedByTestrun = false || opts.groupedByTestrun,
-                avgSteps = this.stats.stepsCount / this.stats.testruns,
-                avgTime = this.stats.timeCount / this.stats.testruns,
-                i,j,duration,moves;
+                i,j;
 
             if(type !== 'moves' && type !== 'clicks') {
                 console.warn('[WARNING] wrong event type ("%s"), choose event type (moves or clicks)',type);
@@ -49,12 +47,8 @@ define([
                     (!this.models[i][type] ||
                     // testrun filter
                     (opts.testrun && opts.testrun !== this.models[i]._id) ||
-                    // only successful filter
-                    (opts.filter && opts.filter === 'only-successful' && this.models[i].status !== 1) ||
-                    // only timedout filter
-                    (opts.filter && opts.filter === 'only-timedout' && this.models[i].status !== 2) ||
-                    // only failed filter
-                    (opts.filter && opts.filter === 'only-failed' && this.models[i].status !== 3)
+                    // param filter
+                    (opts.filter && this.match(opts.filter,this.models[i]))
                 ) {
                     continue;
                 }
@@ -74,29 +68,11 @@ define([
                         continue;
                     }
 
-                    duration += timestamp;
                     ret.push({x: x, y: y, count: 1, url: url, timestamp: timestamp});
                 }
 
-                // get duration
-                moves = this.models[i].moves;
-                duration = new Date(moves[moves.length - 1].timestamp).getTime() / 1000 - new Date(moves[0].timestamp).getTime() / 1000;
-
                 if(groupedByTestrun) {
-                    if(
-                        // if no filter is selected add coords anyway
-                        !opts.filter || (opts.filter && opts.filter.match(/(fastest|slowest|mostSteps|leastSteps)/) === null) ||
-                        // fastest testruns filter
-                        (opts.filter && opts.filter === 'fastest' && duration < avgTime) ||
-                        // fastest testruns filter
-                        (opts.filter && opts.filter === 'slowest' && duration > avgTime) ||
-                        // most steps filter
-                        (opts.filter && opts.filter === 'mostSteps' && this.models[i].visits.length > avgSteps) ||
-                        // least steps filter
-                        (opts.filter && opts.filter === 'leastSteps' && this.models[i].visits.length < avgSteps)
-                    ) {
-                        retGrouped[i] = ret;
-                    }
+                    retGrouped[i] = ret;
                     ret = [];
                 }
 
@@ -275,6 +251,27 @@ define([
 
             }
 
+        },
+        match: function(filter,model) {
+            // get duration
+            var duration = new Date(model.moves[model.moves.length - 1].timestamp).getTime() / 1000 - new Date(model.moves[0].timestamp).getTime() / 1000,
+                avgSteps = this.stats.stepsCount / this.stats.testruns,
+                avgTime  = this.stats.timeCount / this.stats.testruns;
+
+                   // only successful filter
+            return (filter === 'only-successful' && model.status !== 1) ||
+                   // only timedout filter
+                   (filter === 'only-timedout' && model.status !== 2) ||
+                   // only failed filter
+                   (filter === 'only-failed' && model.status !== 3) ||
+                   // fastest testruns filter
+                   (filter === 'fastest' && duration > avgTime) ||
+                   // fastest testruns filter
+                   (filter === 'slowest' && duration < avgTime) ||
+                   // most steps filter
+                   (filter === 'mostSteps' && model.visits.length < avgSteps) ||
+                   // least steps filter
+                   (filter === 'leastSteps' && model.visits.length > avgSteps);
         }
     });
 
