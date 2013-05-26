@@ -33,7 +33,9 @@ define([
                 type = opts.type || 'clicks',
                 ratio = opts.ratio || 1,
                 groupedByTestrun = false || opts.groupedByTestrun,
-                i,j;
+                avgSteps = this.stats.stepsCount / this.stats.testruns,
+                avgTime = this.stats.timeCount / this.stats.testruns,
+                i,j,duration,moves;
 
             if(type !== 'moves' && type !== 'clicks') {
                 console.warn('[WARNING] wrong event type ("%s"), choose event type (moves or clicks)',type);
@@ -52,7 +54,8 @@ define([
                     // only timedout filter
                     (opts.filter && opts.filter === 'only-timedout' && this.models[i].status !== 2) ||
                     // only failed filter
-                    (opts.filter && opts.filter === 'only-failed' && this.models[i].status !== 3)) {
+                    (opts.filter && opts.filter === 'only-failed' && this.models[i].status !== 3)
+                ) {
                     continue;
                 }
 
@@ -63,16 +66,37 @@ define([
                         url = this.models[i][type][j].url,
                         timestamp = new Date(this.models[i][type][j].timestamp).getTime();
 
-                    // neglect {0,0} coords  
-                    if((x === 0 && y === 0) || (opts.url && opts.url !== this.models[i][type][j].url)) {
+                    if(
+                        // neglect {0,0} coords
+                        (x === 0 && y === 0) ||
+                        // url filter
+                        (opts.url && opts.url !== this.models[i][type][j].url)) {
                         continue;
                     }
 
+                    duration += timestamp;
                     ret.push({x: x, y: y, count: 1, url: url, timestamp: timestamp});
                 }
 
+                // get duration
+                moves = this.models[i].moves;
+                duration = new Date(moves[moves.length - 1].timestamp).getTime() / 1000 - new Date(moves[0].timestamp).getTime() / 1000;
+
                 if(groupedByTestrun) {
-                    retGrouped[i] = ret;
+                    if(
+                        // if no filter is selected add coords anyway
+                        !opts.filter || (opts.filter && opts.filter.match(/(fastest|slowest|mostSteps|leastSteps)/) === null) ||
+                        // fastest testruns filter
+                        (opts.filter && opts.filter === 'fastest' && duration < avgTime) ||
+                        // fastest testruns filter
+                        (opts.filter && opts.filter === 'slowest' && duration > avgTime) ||
+                        // most steps filter
+                        (opts.filter && opts.filter === 'mostSteps' && this.models[i].visits.length > avgSteps) ||
+                        // least steps filter
+                        (opts.filter && opts.filter === 'leastSteps' && this.models[i].visits.length < avgSteps)
+                    ) {
+                        retGrouped[i] = ret;
+                    }
                     ret = [];
                 }
 
@@ -169,7 +193,7 @@ define([
                 return _.sortBy(tuples, function (tuple) { return tuple[1]; });
             }
 
-            return {
+            this.stats = {
                 maxSteps: maxSteps,
                 minSteps: minSteps,
                 stepsCount: stepsCount,
@@ -179,6 +203,8 @@ define([
                 mostViewed: sortByValue(pagevisits),
                 testruns: numberOfTestruns
             };
+
+            return this.stats;
         },
         countStatusTypes: function() {
             var ret = [0,0,0,0];

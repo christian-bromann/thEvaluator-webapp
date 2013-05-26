@@ -196,9 +196,10 @@ define([
                         accumulation = [];
                     }
 
+                    this.ctx.drawCircle(ctx,accumulation);
+
                     if(this.i === coordsByRun.length-1) {
                         this.ctx.$el.find('small').delay(1000).fadeOut();
-                        this.ctx.drawCircle(ctx,accumulation);
                     }
                 }.bind({ctx:this,i:i}),0);
             }
