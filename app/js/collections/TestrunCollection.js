@@ -44,7 +44,7 @@ define([
             for(i = 0; i < this.models.length; ++i) {
 
                 if
-                    (!this.models[i][type] ||
+                    (!this.models[i][type] || this.models[i][type].length === 0 ||
                     // testrun filter
                     (opts.testrun && opts.testrun !== this.models[i]._id) ||
                     // param filter
@@ -129,13 +129,17 @@ define([
                 }
 
                 moves = this.models[i].moves;
-                stepsCount += steps;
 
-                if(steps > maxSteps) {
-                    maxSteps = steps;
-                }
-                if(!minSteps || steps < minSteps) {
-                    minSteps = steps;
+                // only count successful testruns
+                if(this.models[i].status === 1) {
+                    stepsCount += steps;
+
+                    if(steps > maxSteps) {
+                        maxSteps = steps;
+                    }
+                    if(!minSteps || steps < minSteps) {
+                        minSteps = steps;
+                    }
                 }
 
                 if(moves.length && this.models[i].status === 1) {
@@ -177,7 +181,7 @@ define([
                 minTime: minTime,
                 timeCount: timeCount,
                 mostViewed: sortByValue(pagevisits),
-                testruns: numberOfTestruns
+                testruns: _.filter(this.models, function(testrun){ return testrun.status === 1; }).length
             };
 
             return this.stats;
