@@ -42,6 +42,9 @@ define([
 
             this.finishedInitialization = false;
             this.$el.find('svg').remove();
+            this.$el.find('.nocontent').remove();
+            this.$el.find('.testrunList').css('display','inline-block');
+            this.$el.css('overflow','hidden');
 
             this.json = this.testrunCollection.generateWalkPath(this.param);
 
@@ -227,6 +230,10 @@ define([
             }
         },
         sanitize: function(url) {
+            if(url === 'Start') {
+                return url;
+            }
+
             url = url.replace('http://','').replace('https://','');
             url = url.slice(url.indexOf('/'));
 
@@ -252,10 +259,6 @@ define([
 
             var label = elem.data('placeholder') ? elem.data('placeholder') : elem.html();
             elem.parents('.btn-group').find('>.btn:first-Child').html(label);
-
-            this.$el.find('.nocontent').remove();
-            this.$el.find('.testrunList').css('display','inline-block');
-            this.$el.css('overflow','hidden');
         },
         switchTask: function(e) {
             var elem = $(e.target);
@@ -277,8 +280,14 @@ define([
 
         },
         hideUrl:function(d) {
-            var url = d.name.replace('http://','').replace('https://','');
-            url = url.slice(url.indexOf('/'));
+            var url;
+
+            if(d.name === 'Start') {
+                url = 'Start';
+            } else {
+                url = d.name.replace('http://','').replace('https://','');
+                url = url.slice(url.indexOf('/'));
+            }
 
             if(url.length > 20) {
                 url = url.slice(0,18)+'...';

@@ -24,12 +24,14 @@ define([
             this.$el.append(_.template( template ));
         },
         switchFilter: function(e) {
+
             var elem = $(e.target);
 
             this.view.param.filter = elem.attr('href').substr(3);
             elem.parents('.btn-group').find('.clear').css('display','inline-block');
 
             this.onChangeAction.apply(this.view);
+
         }
     });
 

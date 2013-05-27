@@ -198,6 +198,9 @@ define([
         },
         generateWalkPath: function(opts) {
             var ret = [],
+                startObj = {
+                    url: 'Start'
+                },
                 visitsByTaskID;
 
             for(var i = 0; i < this.models.length; ++i) {
@@ -205,6 +208,8 @@ define([
                 visitsByTaskID = _.filter(this.models[i].visits.slice(0), function(visit) {
                     return visit.task === opts.task;
                 });
+
+                visitsByTaskID.unshift(startObj);
 
                 if(
                     // filter empty testruns
@@ -216,6 +221,7 @@ define([
 
                 ret = this.generateTree(ret,visitsByTaskID,0,opts.task);
             }
+
             return ret[0];
         },
         generateTree: function(childs,visits,index,taskID) {
@@ -261,6 +267,11 @@ define([
 
         },
         match: function(filter,model) {
+
+            if(!model.moves || model.moves.length === 0) {
+                return true;
+            }
+
             // get duration
             var duration = new Date(model.moves[model.moves.length - 1].timestamp).getTime() / 1000 - new Date(model.moves[0].timestamp).getTime() / 1000,
                 avgSteps = this.stats.stepsCount / this.stats.testruns,
