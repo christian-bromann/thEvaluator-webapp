@@ -124,7 +124,7 @@ module.exports = function (grunt) {
                 },
                 files: {
                     '<%= yeoman.app %>/all.min.css': '<%= yeoman.app %>/sass/main.scss',
-                    '<%= yeoman.app %>/launch.min.css': '<%= yeoman.app %>/sass/launch.scss',
+                    '<%= yeoman.app %>/launch.min.css': '<%= yeoman.app %>/sass/launch.scss'
                 }
             },
             dist: {
@@ -136,7 +136,8 @@ module.exports = function (grunt) {
                     style: 'compressed'
                 },
                 files: {
-                    '<%= yeoman.dist %>/all.min.css': '<%= yeoman.app %>/sass/main.scss'
+                    '<%= yeoman.dist %>/all.min.css': '<%= yeoman.app %>/sass/main.scss',
+                    '<%= yeoman.dist %>/launch.min.css': '<%= yeoman.app %>/sass/launch.scss'
                 }
             }
         },
