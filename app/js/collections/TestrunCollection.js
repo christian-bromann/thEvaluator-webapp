@@ -12,7 +12,7 @@ define([
     var TestrunCollection = Backbone.Collection.extend({
         model: Testrun,
         url:function(){
-            return 'http://localhost:9001/api/testrun';
+            return 'http://' + window.location.hostname + ':9001/api/testrun';
         },
         getModelByID: function(id){
             return this.detect(function(model) {

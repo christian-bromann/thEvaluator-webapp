@@ -67,6 +67,10 @@ module.exports = function (grunt) {
             },
             dist: {
                 options: {
+                    options: {
+                        port: 80,
+                        hostname: '0.0.0.0'
+                    },
                     middleware: function (connect) {
                         return [
                             mountFolder(connect, 'dist')
