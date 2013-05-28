@@ -16,7 +16,6 @@
     "url": "https://github.com/christian-bromann/thEvaluator-webapp/issues"
   },
   "dependencies": {
-    "grunt-forever": "~0.4.0"
   },
   "devDependencies": {
     "grunt": "~0.4.1",
@@ -42,6 +41,7 @@
     "grunt-open": "~0.2.0",
     "grunt-svgmin": "~0.1.0",
     "grunt-concurrent": "~0.1.0",
+    "grunt-forever": "~0.4.0",
     "matchdep": "~0.1.1"
   },
   "engines": {
