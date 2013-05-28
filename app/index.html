@@ -7,18 +7,38 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
-<title>thEvaluator - Home</title>
+<title>thEvaluator - Task Based Evaluation Tool</title>
 
-<meta name="description" content="">
+<meta name="description" content="thEvaluator is a task based evaluation tool and the application of Christian Bromann (@bromann) bachelor thesis">
 <meta name="viewport" content="width=device-width">
-
-<link rel="stylesheet" href="all.min.css">
-<!-- build:js scripts/vendor/modernizr.js -->
-<script src="components/modernizr/modernizr.js"></script>
-<!-- endbuild -->
+<link rel="stylesheet" href="launch.min.css">
 
 <body>
-<div class="container main"></div>
-<!-- build:js scripts/main.js -->
-<script data-main="js/main" src="components/requirejs/require.js"></script>
-<!-- endbuild -->
+
+<header>
+    <a href="/"><img src="/img/thevaluator.png" alt="thEvaluator - Task Based Evaluation Tool" title="thEvaluator - Task Based Evaluation Tool"></a>
+    <h1>thEvaluator</h1>
+    <h2>A Task Based Evaluation Tool</h2>
+</header>
+
+<section>
+    <a href="mailto:thevaluator@christian-bromann.com?subject=Sign me up as BETA tester&amp;body=This mail needs no text, just press send!">Add me as BETA tester</a>
+    <a href="/thevaluator.crx">Download Extension</a>
+
+    <div class="social">
+        <a href="https://twitter.com/share" class="twitter-share-button" data-via="bromann" data-hashtags="thevaluator">Tweet</a>
+        <g:plusone size="medium"></g:plusone>
+        <div class="fb-like" data-send="false" data-width="50" data-show-faces="false" data-font="arial" data-layout="button_count" data-action="like"></div>
+    </div>
+</section>
+
+<footer>
+    This Chrome extension is part of the bachelor thesis of Christian Bromann for his bachelor<br>
+    degree at the <a href="http://www.beuth-hochschule.de/">Beuth University of Applied Sciences</a> in Digital Media. The thesis is primarily<br>
+    concerned with usability evaluation on arbitrary websites.
+</footer>
+
+<div id="fb-root"></div>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+<script>(function(){var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;po.src = 'https://apis.google.com/js/plusone.js';var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);})();</script>
+<script>(function(d, s, id) {var js, fjs = d.getElementsByTagName(s)[0];if (d.getElementById(id)) return;js = d.createElement(s); js.id = id;js.src = "//connect.facebook.net/de_DE/all.js#xfbml=1";fjs.parentNode.insertBefore(js, fjs);}(document, 'script', 'facebook-jssdk'));</script>

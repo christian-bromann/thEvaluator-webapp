@@ -108,7 +108,7 @@ module.exports = function (grunt) {
             all: {
                 options: {
                     run: true,
-                    urls: ['http://localhost:<%= connect.options.port %>/index.html']
+                    urls: ['http://localhost:<%= connect.options.port %>/app.html']
                 }
             }
         },
@@ -121,7 +121,8 @@ module.exports = function (grunt) {
                     loadPath: 'app/components'
                 },
                 files: {
-                    '<%= yeoman.app %>/all.min.css': '<%= yeoman.app %>/sass/main.scss'
+                    '<%= yeoman.app %>/all.min.css': '<%= yeoman.app %>/sass/main.scss',
+                    '<%= yeoman.app %>/launch.min.css': '<%= yeoman.app %>/sass/launch.scss',
                 }
             },
             dist: {
@@ -168,7 +169,7 @@ module.exports = function (grunt) {
             }
         },
         useminPrepare: {
-            html: '<%= yeoman.app %>/index.html',
+            html: '<%= yeoman.app %>/app.html',
             options: {
                 dest: '<%= yeoman.dist %>'
             }
