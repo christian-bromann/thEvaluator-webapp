@@ -67,10 +67,8 @@ module.exports = function (grunt) {
             },
             dist: {
                 options: {
-                    options: {
-                        port: 80,
-                        hostname: '0.0.0.0'
-                    },
+                    port: 80,
+                    hostname: '0.0.0.0',
                     middleware: function (connect) {
                         return [
                             mountFolder(connect, 'dist')
@@ -272,7 +270,7 @@ module.exports = function (grunt) {
         forever: {
             options: {
                 command: 'grunt',
-                index: 'server:dist',
+                index: 'connect:dist:keepalive',
                 logDir: 'logs'
             }
         }

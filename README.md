@@ -23,5 +23,6 @@ $ bower install
 After this, start the app with:
 
 ```shell
-$ grunt server:dist
+$ grunt build
+$ grunt forever:start
 ```
