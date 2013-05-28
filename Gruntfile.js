@@ -268,6 +268,13 @@ module.exports = function (grunt) {
             all: {
                 rjsConfig: '<%= yeoman.app %>/js/main.js'
             }
+        },
+        forever: {
+            options: {
+                command: 'grunt',
+                index: 'server:dist',
+                logDir: 'logs'
+            }
         }
     });
 
