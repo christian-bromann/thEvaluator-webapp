@@ -1,3 +1,5 @@
+@import 'vendor/colorbox';
+
 body {
     margin: 0;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -22,7 +24,7 @@ body {
     }
 
     section {
-        margin: 120px 0 0 0;
+        margin: 100px 0 0 0;
 
         >a {
             background: #737373;
@@ -34,8 +36,32 @@ body {
             -moz-box-shadow:    3px 3px 2px rgba(50, 50, 50, 0.75);
             box-shadow:         3px 3px 2px rgba(50, 50, 50, 0.75);
             text-shadow:        2px 2px 2px rgba(0 ,  0,  0, 0.40);
-            margin: 50px 15px;
+            margin: 50px 15px 0;
             text-transform: uppercase;
+            line-height: 6em;
+            white-space: nowrap;
+        }
+
+        .preview {
+            margin: 20px 0 0;
+
+            a {
+                text-decoration: none;
+                width: 100px;
+                height: 100px;
+                overflow: hidden;
+                margin: 0 10px;
+
+                img {
+                    margin: 20px 0 0;
+                    height: 100px;
+                    width: 100px;
+                    -webkit-box-shadow: 3px 3px 2px rgba(50, 50, 50, 0.75);
+                    -moz-box-shadow:    3px 3px 2px rgba(50, 50, 50, 0.75);
+                    box-shadow:         3px 3px 2px rgba(50, 50, 50, 0.75);
+                    border-radius: 4em;
+                }
+            }
         }
 
         .social {

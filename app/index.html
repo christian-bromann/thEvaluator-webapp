@@ -12,7 +12,6 @@
 <meta name="description" content="thEvaluator is a task based evaluation tool and the application of Christian Bromann (@bromann) bachelor thesis">
 <meta name="viewport" content="width=device-width">
 <link rel="stylesheet" href="launch.min.css">
-
 <body>
 
 <header>
@@ -24,6 +23,13 @@
 <section>
     <a href="mailto:thevaluator@christian-bromann.com?subject=Sign me up as BETA tester&amp;body=This mail needs no text, just press send!">Add me as BETA tester</a>
     <a href="/thevaluator.crx">Download Extension</a>
+
+    <div class="preview">
+        <a href="/img/preview/createTestcase.jpg" rel="preview" title="create individualized testcases with specific tasks for any website you like"><img src="/img/preview/createTestcase.jpg"></a>
+        <a href="/img/preview/solveTasks.jpg" rel="preview" title="thEvaluator extension initializes tasks and records all events"><img src="/img/preview/solveTasks.jpg"></a>
+        <a href="/img/preview/viewHeatmaps.jpg" rel="preview" title="evaluate user behavior with clickmaps, heatmaps, gaze-spots and gaze-spots"><img src="/img/preview/viewHeatmaps.jpg"></a>
+        <a href="/img/preview/analyseWalkpaths.jpg" rel="preview" title="find common walk paths"><img src="/img/preview/analyseWalkpaths.jpg"></a>
+    </div>
 
     <div class="social">
         <a href="https://twitter.com/share" class="twitter-share-button" data-via="bromann" data-hashtags="thevaluator">Tweet</a>
@@ -39,6 +45,15 @@
 </footer>
 
 <div id="fb-root"></div>
+
+<!-- build:js js/vendor/jquery.min.js -->
+<script src="components/jquery/jquery.min.js"></script>
+<!-- endbuild -->
+<!-- build:js js/vendor/jquery.colorbox-min.js -->
+<script src="components/jquery.colorbox/jquery.colorbox-min.js"></script>
+<!-- endbuild -->
+<script type="text/javascript">$(function(){ $('.preview a').colorbox({rel:'preview',opacity:0.75}); });</script>
+
 <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
 <script>(function(){var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;po.src = 'https://apis.google.com/js/plusone.js';var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);})();</script>
 <script>(function(d, s, id) {var js, fjs = d.getElementsByTagName(s)[0];if (d.getElementById(id)) return;js = d.createElement(s); js.id = id;js.src = "//connect.facebook.net/de_DE/all.js#xfbml=1";fjs.parentNode.insertBefore(js, fjs);}(document, 'script', 'facebook-jssdk'));</script>

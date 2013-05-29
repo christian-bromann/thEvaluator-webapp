@@ -10,7 +10,8 @@
     "requirejs-plugins": "~1.0.1",
     "sass-bootstrap": "~2.3.0",
     "text": "~2.0.6",
-    "underscore-amd": "~1.4.4"
+    "underscore-amd": "~1.4.4",
+    "jquery.colorbox": "~1.4.17"
   },
   "devDependencies": {}
 }
