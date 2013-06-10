@@ -42,6 +42,7 @@ module.exports = function (grunt) {
         connect: {
             options: {
                 port: 9000,
+                distPort: 80,
                 hostname: 'localhost'
             },
             livereload: {
@@ -80,6 +81,9 @@ module.exports = function (grunt) {
         open: {
             server: {
                 path: 'http://localhost:<%= connect.options.port %>'
+            },
+            dist: {
+                path: 'http://localhost:<%= connect.options.distPort %>'
             }
         },
         clean: {
@@ -271,8 +275,7 @@ module.exports = function (grunt) {
         forever: {
             options: {
                 command: 'grunt',
-                index: 'connect:dist:keepalive',
-                logDir: 'logs'
+                index: 'connect:dist:keepalive'
             }
         }
     });
@@ -281,7 +284,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask('server', function (target) {
         if (target === 'dist') {
-            return grunt.task.run(['build', 'open', 'connect:dist:keepalive']);
+            return grunt.task.run(['build', 'open:dist', 'forever:start']);
         }
 
         grunt.task.run([
@@ -289,7 +292,7 @@ module.exports = function (grunt) {
             'concurrent:server',
             'livereload-start',
             'connect:livereload',
-            'open',
+            'open:server',
             'watch'
         ]);
     });
