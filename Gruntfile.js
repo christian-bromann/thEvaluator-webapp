@@ -27,7 +27,7 @@ module.exports = function (grunt) {
         watch: {
             sass: {
                 files: ['{.tmp,<%= yeoman.app %>}/sass/{,*/}*.scss'],
-                tasks: ['sass','livereload']
+                tasks: ['sass:server','livereload']
             },
             livereload: {
                 files: [

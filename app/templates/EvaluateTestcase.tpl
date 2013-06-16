@@ -16,6 +16,11 @@
     <div class="content"></div>
 </div>
 
+<div class="widget feedback">
+    <h3>Feebacks</h3>
+    <div class="content"></div>
+</div>
+
 <div class="widget geoData">
     <h3>Participients By Country</h3>
     <div class="content">
