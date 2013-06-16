@@ -220,6 +220,7 @@ define([
 
             data.targetAction = $(this.el).find('.targetAction').val();
             data.required     = $(this.el).find('.required').is(':checked');
+            data.propagate    = $(this.el).find('.propagate').is(':checked');
             data.timestamp    = Date.now();
 
             if(!error) {

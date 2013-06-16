@@ -1,8 +1,8 @@
 <li class="taskform<% if (task.attributes) { %> editMode<% } %>"<% if (task.attributes) { %>  data-timestamp="<%=task.get('timestamp')%>"<% } %>>
     <div class="control-group">
-        <label class="control-label" for="inputName">Name*</label>
+        <label class="control-label" for="taskName">Name*</label>
         <div class="controls">
-            <input type="text" name="name" id="inputName" class="required" value="<% if (task.attributes) { %><%=task.get('name')%><% } %>">
+            <input type="text" name="name" id="taskName" class="required" value="<% if (task.attributes) { %><%=task.get('name')%><% } %>">
         </div>
     </div>
     <div class="control-group">
@@ -12,10 +12,10 @@
         </div>
     </div>
     <div class="control-group">
-        <label class="control-label" for="inputName">Required?</label>
+        <label class="control-label" for="taskRequired">Required?</label>
         <div class="controls">
             <label class="checkbox">
-                <input type="checkbox" name="required" value="1" class="required"<% if (task.attributes && task.get('required')) { %> checked="checked"<% } %>>
+                <input type="checkbox" name="required" value="1" id="taskRequired" class="required"<% if (task.attributes && task.get('required')) { %> checked="checked"<% } %>>
                 <small>(task is <i>required</i> to continue with the next test?)</small>
             </label>
         </div>
@@ -28,9 +28,9 @@
     </div>
     <div class="control-group input-prepend">
         <div class="btn-group">
-            <label class="control-label" for="inputName">Target Action*</label>
+            <label class="control-label" for="taskAction">Target Action*</label>
             <div class="controls">
-                <select name="targetAction" class="targetAction">
+                <select name="targetAction" id="taskAction" class="targetAction">
                 <% 
                 var events = ['blur','change','click','contextmenu','copy','cut',
                     'dblclick','error','focus','focusin','focusout','hashchange','keydown',
@@ -44,9 +44,17 @@
                 <% 
                 }
                 %>
-            </select>
-            <input type="text" name="targetElem" class="targetElem required" value='<% if (task.attributes) { %><%=task.get('targetElem')%><% } %>'><small>(target elem, e.g. .submitButton)</small>
+                </select>
+                <input type="text" name="targetElem" class="targetElem required" value='<% if (task.attributes) { %><%=task.get('targetElem')%><% } %>'><small>(target elem, e.g. .submitButton)</small>
             </div>
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" for="taskPropagate">Propagate Target Event?</label>
+        <div class="controls">
+            <label class="checkbox">
+                <input type="checkbox" id="taskPropagate" name="propagate" class="propagate" value="1" <% if (task.attributes && task.get('propagate')) { %> checked="checked"<% } %>>
+            </label>
         </div>
     </div>
     <div class="controls">
