@@ -17,6 +17,12 @@ define([
         render: function() {
 
             var data = {testruns: this.testrunCollection.filter(function(testrun) { return testrun.feedback ? !(testrun.feedback instanceof Array) : false; })};
+
+            if(data.testruns.length === 0) {
+                this._renderNoContent();
+                return;
+            }
+
             this.$el.html(_.template( template, data ));
 
         }
