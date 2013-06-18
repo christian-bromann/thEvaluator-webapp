@@ -252,17 +252,9 @@ module.exports = function (grunt) {
                         '.htaccess',
                         'img/{,}**/*.{webp,gif}'
                     ]
-                },{
-                    expand: true,
-                    dot: true,
-                    cwd: '<%= yeoman.app %>',
-                    dest: '<%= yeoman.dist %>/js/vendor',
-                    src: [
-                        'components/jquery/jquery.min.js',
-                        'components/jquery.colorbox/jquery.colorbox-min.js'
-                    ]
-
-                }]
+                },
+                { expand: true, dot: true, cwd: '<%= yeoman.app %>/components/jquery', dest: '<%= yeoman.dist %>/js/vendor', src: ['jquery.min.js'] },
+                { expand: true, dot: true, cwd: '<%= yeoman.app %>/components/jquery.colorbox', dest: '<%= yeoman.dist %>/js/vendor', src: ['jquery.colorbox-min.js'] }]
             }
         },
         concurrent: {
@@ -322,8 +314,8 @@ module.exports = function (grunt) {
         'sass:dist',
         'cssmin',
         'concat',
-        'uglify',
         'copy',
+        'uglify',
         'rev',
         'usemin'
     ]);
