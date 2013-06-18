@@ -34,7 +34,7 @@
         </button>
         <ul class="dropdown-menu testcaseList idList">
             <% for(var i = 0; i < models.length; ++i) { %>
-            <li class="<%=models[i]._id%>"><a href="#!/<%=models[i]._id%>"><%=models[i].timestamp%></a></li>
+            <li class="<%=models[i]._id%> status<%=models[i].status%>"><a href="#!/<%=models[i]._id%>"><%=models[i].timestamp%></a></li>
             <% } %>
         </ul>
     </div>

@@ -3,6 +3,15 @@ $iconWhiteSpritePath: "../img/glyphicons-halflings-white.png";
 
 @import 'sass-bootstrap/lib/bootstrap';
 
+@mixin statusGradient($startColor) {
+    background: -moz-linear-gradient(left, $startColor 0%, rgba(255,255,255,0.15) 25%, rgba(255,255,255,0) 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, right top, color-stop(0%,$startColor), color-stop(25%,rgba(255,255,255,0.15)), color-stop(100%,rgba(255,255,255,0))); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(left, $startColor 0%,rgba(255,255,255,0.15) 25%,rgba(255,255,255,0) 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(left, $startColor 0%,rgba(255,255,255,0.15) 25%,rgba(255,255,255,0) 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(left, $startColor 0%,rgba(255,255,255,0.15) 25%,rgba(255,255,255,0) 100%); /* IE10+ */
+    background: linear-gradient(to right, $startColor 0%,rgba(255,255,255,0.15) 25%,rgba(255,255,255,0) 100%); /* W3C */
+}
+
 body {
     padding: 40px 0 0;
 }
@@ -240,6 +249,13 @@ body {
                 color: #ddd;
                 font-weight: bold;
             }
+        }
+
+        .testcaseList li {
+            &.status0 { @include statusGradient(rgba(0,0,255,0.2)); }
+            &.status1 { @include statusGradient(rgba(0,255,0,0.2)); }
+            &.status2 { @include statusGradient(rgba(255,255,0,0.2)); }
+            &.status3 { @include statusGradient(rgba(255,0,0,0.2)); }
         }
     }
 }
