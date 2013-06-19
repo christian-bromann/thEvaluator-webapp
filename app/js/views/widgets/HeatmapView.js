@@ -163,6 +163,7 @@ define([
 
             var coordsByRun  = this.testrunCollection.getEventCoordinates(this.param),
                 accumulation = [],
+                fixationCnt  = 0,
                 canvas,ctx,curr,prev;
 
             canvas = document.createElement('canvas');
@@ -184,6 +185,7 @@ define([
                     accumulation = [];
                     this.ctx.$el.find('.status em').html(Math.round((this.i+1) / coordsByRun.length * 10000)/100+'%');
 
+                    fixationCnt = 0;
                     for(var j = 1; coordsByRun[this.i] && j < coordsByRun[this.i].length; ++j) {
                         curr = coordsByRun[this.i][j];
                         prev = coordsByRun[this.i][j-1];
@@ -204,7 +206,8 @@ define([
                         }
 
                         // draw circle
-                        this.ctx.drawCircle(ctx,accumulation);
+                        ++fixationCnt;
+                        this.ctx.drawCircle(ctx,accumulation,fixationCnt);
                         accumulation = [];
                     }
 
@@ -216,14 +219,14 @@ define([
                 }.bind({ctx:this,i:i}),0);
             }
         },
-        drawCircle: function(ctx,accumulation) {
+        drawCircle: function(ctx,accumulation,fixationCnt) {
 
             if(!accumulation.length) {
                 return;
             }
 
             ctx.beginPath();
-            ctx.arc(accumulation[0].x, accumulation[0].y, accumulation.length, 0, 2 * Math.PI, false);
+            ctx.arc(accumulation[0].x, accumulation[0].y, accumulation.length*1.5, 0, 2 * Math.PI, false);
             ctx.lineWidth = 1;
             ctx.stroke();
             ctx.fill();
@@ -232,7 +235,7 @@ define([
             var normalFillStyle = ctx.fillStyle;
             ctx.fillStyle = 'black';
             if(accumulation.length > 5) {
-                ctx.fillText(accumulation.length, accumulation[0].x, accumulation[0].y);
+                ctx.fillText(fixationCnt, accumulation[0].x, accumulation[0].y);
             }
 
             // reset styles
